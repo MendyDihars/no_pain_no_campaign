@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { getFullname, getInitials } from '@root/lib/decorators/character.helper';
-import { ReactFlow, Controls, Background, BaseEdge, getStraightPath, Handle } from '@xyflow/react';
+import { ReactFlow, BaseEdge, getStraightPath, Handle } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';  
 
 function CustomEdge({ id, sourceX, sourceY, targetX, targetY }) {
@@ -31,10 +31,10 @@ function CharacterNode({ data: { character, type } }) {
         <div className="text-center">
           {getFullname(character)}
         </div>
-        <Handle type={type} />
       </div>
-      <div className="w-15 h-15 hover:scale-110 transition-all duration-300 bg-white rounded-full nodrag text-black flex items-center justify-center text-2xl font-bold">
+      <div className="w-15 h-15 hover:scale-110 transition-all duration-300 bg-white rounded-full nodrag text-black flex items-center justify-center text-2xl font-bold relative">
         {getInitials(character)}
+        <Handle type={type} position="top" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'transparent', border: 'none' }} />
       </div>
     </Link>
   );
@@ -112,7 +112,7 @@ export default function CircularRelation({ character }) {
           id: `${character.id}_${relation.id}`,
           source: character.id,
           target: relation.id,
-          // type: 'custom',
+          type: 'custom',
         })),
       );
     }
