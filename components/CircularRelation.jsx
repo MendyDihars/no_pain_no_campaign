@@ -6,7 +6,7 @@ import { getFullname, getInitials } from '@root/lib/decorators/character.helper'
 import { ReactFlow, BaseEdge, getStraightPath, Handle } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';  
 
-function CustomEdge({ id, sourceX, sourceY, targetX, targetY }) {
+function CustomEdge({ id, sourceX, sourceY, targetX, targetY, data: { character } }) {
   const [edgePath] = getStraightPath({
     sourceX,
     sourceY,
@@ -14,13 +14,30 @@ function CustomEdge({ id, sourceX, sourceY, targetX, targetY }) {
     targetY,
   });
   return (
-    <BaseEdge id={id} path={edgePath} />
+    <BaseEdge
+      id={id}
+      path={edgePath}
+      style={{ stroke: character.relation_color, strokeWidth: 2 }}
+      label={character.relation_type_name}
+    />
   );
 }
 
-function BackgroundCircleNode() {
+function BackgroundCircleNode({ data: { radius } }) {
   return (
-    <div className="border-1 border-white rounded-full w-[200px] h-[200px]" />
+    <svg
+      width={radius * 2}
+      height={radius * 2}
+    >
+      <circle
+        cx={radius}
+        cy={radius}
+        r={radius}
+        fill="none"
+        stroke="white"
+        strokeWidth="2"
+      />
+    </svg>
   );
 }
 
@@ -56,17 +73,43 @@ export default function CircularRelation({ character }) {
     height: 0,
   });
   const [nodes, setNodes] = useState([]);
-  console.log('nodes', nodes)
   const [edges, setEdges] = useState([]);
-  console.log('edges', edges)
+  const [angles, setAngles] = useState([]);
+  const radius = 200;
 
-  function calculeCirclePosition(center, index, total) {
-    const angle = (index / total) * 2 * Math.PI;
+  function generateRandomAngles(total, minAngleGap) {
+    const angles = [];
+  
+    let tries = 0;
+    const maxTries = 10000;
+  
+    while (angles.length < total && tries < maxTries) {
+      const randomAngle = Math.random() * 2 * Math.PI;
+      const isFarEnough = angles.every(a => Math.abs(a - randomAngle) > minAngleGap);
+  
+      if (isFarEnough) {
+        angles.push(randomAngle);
+      }
+  
+      tries++;
+    }
+  
+    return angles;
+  }
+
+  function calculeCirclePosition(center, index) {
+    const angle = angles[index];
     return {
-      x: center.x + Math.cos(angle) * 200,
-      y: center.y + Math.sin(angle) * 200,
+      x: center.x + Math.cos(angle) * radius,
+      y: center.y + Math.sin(angle) * radius,
     };
   }
+
+  useEffect(() => {
+    if (character.relations.length) {
+      setAngles(generateRandomAngles(character.relations.length, 0.5));
+    }
+  }, [character.relations.length]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -85,22 +128,27 @@ export default function CircularRelation({ character }) {
   useEffect(() => {
     const center = { x: sizes.width / 2, y: sizes.height / 2 };
     setNodes([
-      // {
-      //   id: 'circle',
-      //   position: center,
-      //   type: 'circle',
-      // },
+      {
+        id: 'background-circle-1',
+        type: 'circle',
+        position: center,
+        data: { radius },
+        style: { zIndex: -1 },
+        origin: [0.5, 0.5],
+      },
       {
         id: character.id,
         data: { character, type: 'source' },
         position: center,
         type: 'character',
+        origin: [0.5, 0.5],
       },
       ...character.relations.map((relation, index) => ({
         id: relation.id,
         data: { character: relation, type: 'target' },
-        position: calculeCirclePosition(center, index, character.relations.length),
+        position: calculeCirclePosition(center, index),
         type: 'character',
+        origin: [0.5, 0.5],
       })),
     ]);
   }, [character, sizes]);
@@ -112,13 +160,15 @@ export default function CircularRelation({ character }) {
           id: `${character.id}_${relation.id}`,
           source: character.id,
           target: relation.id,
+          data: { character: relation },
           type: 'custom',
         })),
       );
     }
   }, [nodes]);
+
   return (
-    <div className="w-full h-[80vh]">
+    <div className="w-full h-[80vh] relative">
       <ReactFlow
         ref={ref}
         nodes={nodes}
@@ -129,12 +179,7 @@ export default function CircularRelation({ character }) {
         zoomOnPinch={false}
         zoomOnDoubleClick={false}
         panOnDrag={false}
-        // onNodesChange={console.log}
-        // onConnect={onConnect}
-        // onEdgesChange={onEdgesChange}
-        // onEdgesDelete={onEdgesDelete}
       >
-        {/* <Background /> */}
       </ReactFlow>
     </div>
   );
