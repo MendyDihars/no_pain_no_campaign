@@ -1,8 +1,8 @@
+import { DB } from '@root/lib/db';
 import Link from 'next/link';
-import Character from '@root/lib/models/character';
 
 export default async function Home() {
-  const characters = await Character.select('*').orderBy('firstname', 'asc');
+  const characters = await DB.characters.select('*').orderBy('firstname', 'asc');
 
   return (
     <div className="h-screen flex flex-col">

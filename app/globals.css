@@ -16,3 +16,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+
+/* .react-flow {
+  --xy-background-pattern-dots-color-default: var(--black) !important;
+} */
