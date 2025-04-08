@@ -2,24 +2,65 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import {
+  ReactFlow,
+  BaseEdge,
+  getStraightPath,
+  Handle,
+  useNodesState,
+  useEdgesState,
+  EdgeLabelRenderer,
+} from '@xyflow/react';
+import { Switch } from '@root/components/ui/switch';
+import { Label } from '@root/components/ui/label';
 import { getFullname, getInitials } from '@root/lib/decorators/character.helper';
-import { ReactFlow, BaseEdge, getStraightPath, Handle } from '@xyflow/react';
+import Tooltip from '@root/components/ui/Tooltip';
 import '@xyflow/react/dist/style.css';  
 
-function CustomEdge({ id, sourceX, sourceY, targetX, targetY, data: { character } }) {
-  const [edgePath] = getStraightPath({
+function RelationEdge({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  data: { character, isHovered },
+}) {
+  const [edgePath, labelX, labelY] = getStraightPath({
     sourceX,
     sourceY,
     targetX,
     targetY,
   });
+
   return (
-    <BaseEdge
-      id={id}
-      path={edgePath}
-      style={{ stroke: character.relation_color, strokeWidth: 2 }}
-      label={character.relation_type_name}
-    />
+    <>
+      <BaseEdge
+        id={id}
+        path={edgePath}
+        style={{ stroke: character.relation_color, strokeWidth: 2 }}
+        label={character.relation_name}
+      />
+      <EdgeLabelRenderer>
+        <div
+          style={{
+            transform: `translate(${labelX}px, ${labelY}px) translate(-50%, -50%)`,
+            transformOrigin: 'center',
+          }}
+          className="absolute"
+        >
+          <Tooltip
+            rootProps={{
+              open: isHovered,
+            }}
+            content={character.relation_name}
+          >
+            <span className="bg-background text-xl rounded-full p-1">
+              {character?.relation_icon}
+            </span>
+          </Tooltip>
+        </div>
+      </EdgeLabelRenderer>
+    </>
   );
 }
 
@@ -43,7 +84,7 @@ function BackgroundCircleNode({ data: { radius } }) {
 
 function CharacterNode({ data: { character, type } }) {
   return (
-    <Link href={`/characters/${character.id}`} className="relative">
+    <Link href={`/characters/${character?.id}`} className="relative">
       <div className="absolute top-[-20px] left-[-20px] text-white text-xs w-[100px]">
         <div className="text-center">
           {getFullname(character)}
@@ -58,7 +99,7 @@ function CharacterNode({ data: { character, type } }) {
 }
 
 const edgeTypes = {
-  custom: CustomEdge,
+  relation: RelationEdge,
 }
 
 const nodeTypes = {
@@ -66,16 +107,28 @@ const nodeTypes = {
   circle: BackgroundCircleNode,
 }
 
+const minDistance = 0.75;
+
 export default function CircularRelation({ character }) {
+  if (!character) return (
+    <div>Aucun personnage trouvé</div>
+  );
+
   const ref = useRef(null);
+  const [isRandomAngles, setIsRandomAngles] = useState(true);
   const [sizes, setSizes] = useState({
     width: 0,
     height: 0,
   });
-  const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
+  const [nodes, setNodes] = useNodesState([]);
+  const [edges, setEdges] = useEdgesState([]);
   const [angles, setAngles] = useState([]);
+  const [centerCoords, setCenterCoords] = useState({});
   const radius = 200;
+
+  function toggleAngles() {
+    setIsRandomAngles((prev) => !prev);
+  }
 
   function generateRandomAngles(total, minAngleGap) {
     const angles = [];
@@ -97,6 +150,15 @@ export default function CircularRelation({ character }) {
     return angles;
   }
 
+  function generateEqualAngles(total) {
+    const angles = [];
+    const angle = 2 * Math.PI / total;
+    for (let i = 0; i < total; i++) {
+      angles.push(i * angle);
+    }
+    return angles;
+  }
+
   function calculeCirclePosition(center, index) {
     const angle = angles[index];
     return {
@@ -105,11 +167,39 @@ export default function CircularRelation({ character }) {
     };
   }
 
+  function handleHoverEdge(_, edge) {
+    setEdges((old) => old.map((e) => (
+      edge.id === e.id ? { ...e, data: { ...e.data, isHovered: !e.data.isHovered } } : e
+    )));
+  }
+
   useEffect(() => {
-    if (character.relations.length) {
-      setAngles(generateRandomAngles(character.relations.length, 0.5));
+    if (character?.relations.length) {
+      setAngles(
+        isRandomAngles
+          ? generateRandomAngles(character.relations.length, minDistance)
+          : generateEqualAngles(character.relations.length)
+      );
     }
-  }, [character.relations.length]);
+    if (nodes.length && character.relations.length) {
+    }
+  }, [character?.relations.length, isRandomAngles]);
+
+  useEffect(() => {
+    if (nodes.length) {
+      let index = 0;
+      const ids = character.relations.map((relation) => relation.id);
+      setNodes(nodes.map((node) => {
+        if (ids.includes(node.id)) {
+          return {
+            ...node,
+            position: calculeCirclePosition(centerCoords, index++),
+          };
+        }
+        return node;
+      }));
+    }
+  }, [angles, nodes.length, centerCoords])
 
   useEffect(() => {
     const handleResize = () => {
@@ -127,6 +217,7 @@ export default function CircularRelation({ character }) {
 
   useEffect(() => {
     const center = { x: sizes.width / 2, y: sizes.height / 2 };
+    setCenterCoords(center);
     setNodes([
       {
         id: 'background-circle-1',
@@ -137,13 +228,13 @@ export default function CircularRelation({ character }) {
         origin: [0.5, 0.5],
       },
       {
-        id: character.id,
+        id: character?.id,
         data: { character, type: 'source' },
         position: center,
         type: 'character',
         origin: [0.5, 0.5],
       },
-      ...character.relations.map((relation, index) => ({
+      ...character?.relations.map((relation, index) => ({
         id: relation.id,
         data: { character: relation, type: 'target' },
         position: calculeCirclePosition(center, index),
@@ -156,12 +247,12 @@ export default function CircularRelation({ character }) {
   useEffect(() => {
     if (nodes.length) {
       setEdges(
-        character.relations.map((relation) => ({
+        character?.relations.map((relation) => ({
           id: `${character.id}_${relation.id}`,
           source: character.id,
           target: relation.id,
           data: { character: relation },
-          type: 'custom',
+          type: 'relation',
         })),
       );
     }
@@ -169,6 +260,10 @@ export default function CircularRelation({ character }) {
 
   return (
     <div className="w-full h-[80vh] relative">
+      <div className="flex items-center mb-2">
+        <Label htmlFor="equal-angles" className="me-2">Structure symétrique</Label>
+        <Switch id="equal-angles" onCheckedChange={toggleAngles} className="cursor-pointer" />
+      </div>
       <ReactFlow
         ref={ref}
         nodes={nodes}
@@ -179,6 +274,8 @@ export default function CircularRelation({ character }) {
         zoomOnPinch={false}
         zoomOnDoubleClick={false}
         panOnDrag={false}
+        onEdgeMouseEnter={handleHoverEdge}
+        onEdgeMouseLeave={handleHoverEdge}
       >
       </ReactFlow>
     </div>

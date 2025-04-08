@@ -100,7 +100,8 @@
 |-------------|---------------|-------------------------------|-------------------------------|--------------------------------|
 | **id** | UUID | 🔑 PK, not null, unique |  | |
 | **color** | VARCHAR(255) | not null |  | |
-| **name** | VARCHAR(255) | not null |  | | 
+| **name** | VARCHAR(255) | not null |  | |
+| **icon** | VARCHAR(255) | null |  | | 
 
 
 ### groups
@@ -257,6 +258,7 @@ erDiagram
 		UUID id
 		VARCHAR(255) color
 		VARCHAR(255) name
+		VARCHAR(255) icon
 	}
 
 	groups {
