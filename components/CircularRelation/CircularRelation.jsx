@@ -1,119 +1,20 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import {
   ReactFlow,
-  BaseEdge,
-  getStraightPath,
-  Handle,
   useNodesState,
   useEdgesState,
-  EdgeLabelRenderer,
 } from '@xyflow/react';
 import { Switch } from '@root/components/ui/switch';
 import { Label } from '@root/components/ui/label';
-import { getFullname, getInitials } from '@root/lib/decorators/character.helper';
-import Tooltip from '@root/components/ui/Tooltip';
-import '@xyflow/react/dist/style.css';  
-
-function RelationEdge({
-  id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  data: { character, isHovered },
-}) {
-  const [edgePath, labelX, labelY] = getStraightPath({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-  });
-
-  return (
-    <>
-      <BaseEdge
-        id={id}
-        path={edgePath}
-        style={{ stroke: character.relation_color, strokeWidth: 2 }}
-        label={character.relation_name}
-      />
-      <EdgeLabelRenderer>
-        <div
-          style={{
-            transform: `translate(${labelX}px, ${labelY}px) translate(-50%, -50%)`,
-            transformOrigin: 'center',
-          }}
-          className="absolute"
-        >
-          <Tooltip
-            rootProps={{
-              open: isHovered,
-            }}
-            content={character.relation_name}
-          >
-            <span className="bg-background text-xl rounded-full p-1">
-              {character?.relation_icon}
-            </span>
-          </Tooltip>
-        </div>
-      </EdgeLabelRenderer>
-    </>
-  );
-}
-
-function BackgroundCircleNode({ data: { radius } }) {
-  return (
-    <svg
-      width={radius * 2}
-      height={radius * 2}
-    >
-      <circle
-        cx={radius}
-        cy={radius}
-        r={radius}
-        fill="none"
-        stroke="white"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
-
-function CharacterNode({ data: { character, type } }) {
-  return (
-    <Link href={`/characters/${character?.id}`} className="relative">
-      <div className="absolute top-[-20px] left-[-20px] text-white text-xs w-[100px]">
-        <div className="text-center">
-          {getFullname(character)}
-        </div>
-      </div>
-      <div className="w-15 h-15 hover:scale-110 transition-all duration-300 bg-white rounded-full nodrag text-black flex items-center justify-center text-2xl font-bold relative">
-        {getInitials(character)}
-        <Handle type={type} position="top" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'transparent', border: 'none' }} />
-      </div>
-    </Link>
-  );
-}
-
-const edgeTypes = {
-  relation: RelationEdge,
-}
-
-const nodeTypes = {
-  character: CharacterNode,
-  circle: BackgroundCircleNode,
-}
+import { nodeTypes } from './Nodes';
+import { edgeTypes } from './Edges';
+import '@xyflow/react/dist/style.css';
 
 const minDistance = 0.75;
 
 export default function CircularRelation({ character }) {
-  if (!character) return (
-    <div>Aucun personnage trouvé</div>
-  );
-
   const ref = useRef(null);
   const [isRandomAngles, setIsRandomAngles] = useState(true);
   const [sizes, setSizes] = useState({
@@ -124,6 +25,7 @@ export default function CircularRelation({ character }) {
   const [edges, setEdges] = useEdgesState([]);
   const [angles, setAngles] = useState([]);
   const [centerCoords, setCenterCoords] = useState({});
+  // const [character, setCharacter] = useState(_character);
   const radius = 200;
 
   function toggleAngles() {
@@ -181,8 +83,6 @@ export default function CircularRelation({ character }) {
           : generateEqualAngles(character.relations.length)
       );
     }
-    if (nodes.length && character.relations.length) {
-    }
   }, [character?.relations.length, isRandomAngles]);
 
   useEffect(() => {
@@ -199,7 +99,7 @@ export default function CircularRelation({ character }) {
         return node;
       }));
     }
-  }, [angles, nodes.length, centerCoords])
+  }, [angles, nodes.length, centerCoords, character?.relations?.length])
 
   useEffect(() => {
     const handleResize = () => {
@@ -259,7 +159,7 @@ export default function CircularRelation({ character }) {
   }, [nodes]);
 
   return (
-    <div className="w-full h-[80vh] relative">
+    <div className="w-full h-[60vh] relative">
       <div className="flex items-center mb-2">
         <Label htmlFor="equal-angles" className="me-2">Structure symétrique</Label>
         <Switch id="equal-angles" onCheckedChange={toggleAngles} className="cursor-pointer" />
