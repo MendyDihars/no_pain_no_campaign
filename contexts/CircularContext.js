@@ -1,6 +1,5 @@
 'use client';
 
-import DATime from '@root/lib/da-time';
 import {
   createContext,
   useState,
@@ -8,7 +7,8 @@ import {
   useMemo,
   useEffect,
 } from 'react';
-import { getCurrentDate, setCurrentDate } from '@root/actions/settings';
+import DATime from '@root/lib/da-time';
+import { DEFAULT_DATE } from '@root/lib/decorators/character.helper';
 
 export const CircularContext = createContext({
   date: undefined,
@@ -16,20 +16,18 @@ export const CircularContext = createContext({
 });
 
 export function CircularProvider({ children }) {
-  const [date, setOnlyDate] = useState(undefined);
+  const [date, setDate] = useState(undefined);
 
   useEffect(() => {
-    async function fetchDate() {
-      const date = new DATime(await getCurrentDate());
-      setDate(date);
-    }
-    fetchDate();
+    const date = +localStorage.getItem('date') || DEFAULT_DATE;
+    setDate(new DATime(date));
   }, []);
 
-  async function setDate(date) {
-    await setCurrentDate(typeof date === 'number' ? date : date.timestamp);
-    setOnlyDate(typeof date === 'number' ? new DATime(date) : date);
-  }
+  useEffect(() => {
+    if (date) {
+      localStorage.setItem('date', date.timestamp);
+    }
+  }, [date])
 
   const value = useMemo(() => ({ date, setDate }), [date]);
 

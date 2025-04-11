@@ -136,3 +136,28 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.pretty-scrollbar::-webkit-scrollbar {
+  cursor: grab;
+  height: 8px;
+}
+
+.pretty-scrollbar::-webkit-scrollbar-track {
+  cursor: grab;
+  background: var(--background);
+}
+
+.pretty-scrollbar::-webkit-scrollbar-thumb {
+  cursor: grab;
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+.pretty-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+.pretty-scrollbar::-webkit-scrollbar-thumb:active {
+  background: var(--primary);
+  cursor: grabbing;
+}

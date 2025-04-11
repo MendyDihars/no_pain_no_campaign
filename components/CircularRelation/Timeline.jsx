@@ -26,39 +26,49 @@ const colors = [
   'bg-fuchsia-400',
 ];
 
-function NumberInput({ value, onChange }) {
+function NumberInput({ value, onChange, min = 0 }) {
+  const val = +value;
   function handleChangeUp() {
-    if (value === 9) {
-      onChange(0);
+    if (val === 9) {
+      onChange(min);
     } else {
-      onChange(value + 1);
+      onChange(val + 1);
     }
   }
   
   function handleChangeDown() {
-    if (value === 0) {
+    if (val === min) {
       onChange(9);
     } else {
-      onChange(value - 1);
+      onChange(val - 1);
     }
   }
 
   return (
     <div className="flex flex-col items-center">
       <ChevronUpIcon className="cursor-pointer hover:bg-gray-900 rounded-full p-1" onClick={handleChangeUp} />
-      {value}
+      {val}
       <ChevronDownIcon className="cursor-pointer hover:bg-gray-900 rounded-full p-1" onClick={handleChangeDown} />
     </div>
   )
 }
 
 function TimelineDayCalendar({ calendar, events }) {
+  const ref = useRef(null);
   const { date, setDate } = useCircular();
+
+  useEffect(() => {
+    // go to scroll position of the day and put it in the center of the screen
+    const day = ref.current.querySelector(`[data-id="${date.timestamp}"]`);
+    if (day) {
+      day.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [date]);
 
   return (
     <>
       {calendar.byMonth.map((month, i) => (
-        <div key={month[0].format} className="flex flex-col justify-center items-start">
+        <div ref={ref} key={month[0].format} className="flex flex-col justify-center items-start">
           <div>{month[0].monthName}</div>
           <div className={`h-[4px] w-full ${colors[i]} rounded-full`} />
           <div className="flex">
@@ -80,10 +90,11 @@ function TimelineDayCalendar({ calendar, events }) {
                   )}
                 >
                 <div
-                  className={`w-20 h-10 font-bold border-1 flex justify-center items-center cursor-pointer ${event ? 'bg-cyan-900' : 'bg-secondary'}`}
-                  onClick={() => setDate(day.timestamp)}
+                  data-id={day.timestamp}
+                  className={`w-10 h-10 font-bold border-1 flex justify-center items-center cursor-pointer rounded-b-lg ${event ? 'bg-cyan-900' : 'bg-secondary'}`}
+                  onClick={() => setDate(new DATime(day.timestamp))}
                 >
-                  <div className={`${day.timestamp === date.timestamp ? 'bg-white text-black rounded-full flex justify-center items-center h-8 w-8' : ''}`}>
+                  <div className={`${day.timestamp === date.timestamp ? 'bg-white text-black h-full w-full rounded-b-lg flex justify-center items-center' : ''}`}>
                     {day.day}
                   </div>
                 </div>
@@ -102,20 +113,20 @@ export default function Timeline({ events: storedEvents }) {
   const [isClientLoaded, setIsClientLoaded] = useState(false);
   const { date, setDate } = useCircular();
   
-  const yearSplitted = useMemo(() => (
-    date?.year
-      ? DATime.convertYearToString(date.year).replace(/:/, '').split('')
-      : ['0', '0', '0']
-  ), [date]);
+  const yearSplitted = useMemo(() => {
+    if (!date?.year) return ['0', '0', '0', '0'];
+    const splitted = DATime.convertYearToString(date.year).replace(/:/, '').split('');
+    if (splitted.length === 3) return ['0', ...splitted];
+    return splitted;
+  }, [date]);
 
   function handleYearChange(index) {
     return (value) => {
-      const realIndex = index === 0 ? 0 : index + 1;
-      let currentDate = date.formatDate().split('/');
-      let year = currentDate[2].split('');
-      year[realIndex] = value;
-      currentDate[2] = year.join('');
-      setDate(new DATime(currentDate.join('/')));
+      const clone = [...yearSplitted];
+      clone[index] = value.toString();
+      const yearStr = `${clone[0] === '0' ? '' : clone[0]}${clone[1]}:${clone[2]}${clone[3]}`;
+      const splitted = date.formatDate().split('/');
+      setDate(new DATime(`${splitted[0]}/${splitted[1]}/${yearStr}`));
     }
   }
 
@@ -133,11 +144,12 @@ export default function Timeline({ events: storedEvents }) {
     <div>
       <div className="flex items-center gap-2 mb-6">
         <NumberInput value={yearSplitted[0]} onChange={handleYearChange(0)} />
+        <NumberInput value={yearSplitted[1]} onChange={handleYearChange(1)} min={1} />
         :
-        <NumberInput value={yearSplitted[1]} onChange={handleYearChange(1)} />
         <NumberInput value={yearSplitted[2]} onChange={handleYearChange(2)} />
+        <NumberInput value={yearSplitted[3]} onChange={handleYearChange(3)} />
       </div>
-      <div ref={ref} className="w-full h-full flex items-center overflow-x-auto no-scrollbar">
+      <div ref={ref} className="w-full h-full flex items-center overflow-x-auto pretty-scrollbar">
         <TimelineDayCalendar calendar={calendar} events={events} setDate={setDate} />
       </div>
     </div>

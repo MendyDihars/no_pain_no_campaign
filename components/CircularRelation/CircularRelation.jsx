@@ -11,21 +11,24 @@ import { Label } from '@root/components/ui/label';
 import { nodeTypes } from './Nodes';
 import { edgeTypes } from './Edges';
 import '@xyflow/react/dist/style.css';
+import { getCharacterContext } from '@root/actions/character';
+import { useCircular } from '@root/contexts/CircularContext';
 
 const minDistance = 0.75;
 
-export default function CircularRelation({ character }) {
+export default function CircularRelation({ id }) {
   const ref = useRef(null);
   const [isRandomAngles, setIsRandomAngles] = useState(true);
   const [sizes, setSizes] = useState({
     width: 0,
     height: 0,
   });
+  const { date } = useCircular();
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const [angles, setAngles] = useState([]);
   const [centerCoords, setCenterCoords] = useState({});
-  // const [character, setCharacter] = useState(_character);
+  const [character, setCharacter] = useState();
   const radius = 200;
 
   function toggleAngles() {
@@ -76,19 +79,19 @@ export default function CircularRelation({ character }) {
   }
 
   useEffect(() => {
-    if (character?.relations.length) {
+    if (character?.relations?.length) {
       setAngles(
         isRandomAngles
-          ? generateRandomAngles(character.relations.length, minDistance)
-          : generateEqualAngles(character.relations.length)
+          ? generateRandomAngles(character?.relations?.length, minDistance)
+          : generateEqualAngles(character?.relations?.length)
       );
     }
-  }, [character?.relations.length, isRandomAngles]);
+  }, [character?.relations?.length, isRandomAngles]);
 
   useEffect(() => {
     if (nodes.length) {
       let index = 0;
-      const ids = character.relations.map((relation) => relation.id);
+      const ids = character?.relations?.map((relation) => relation.id) ?? [];
       setNodes(nodes.map((node) => {
         if (ids.includes(node.id)) {
           return {
@@ -116,38 +119,42 @@ export default function CircularRelation({ character }) {
   }, []);
 
   useEffect(() => {
-    const center = { x: sizes.width / 2, y: sizes.height / 2 };
-    setCenterCoords(center);
-    setNodes([
-      {
-        id: 'background-circle-1',
-        type: 'circle',
-        position: center,
-        data: { radius },
-        style: { zIndex: -1 },
-        origin: [0.5, 0.5],
-      },
-      {
-        id: character?.id,
-        data: { character, type: 'source' },
-        position: center,
-        type: 'character',
-        origin: [0.5, 0.5],
-      },
-      ...character?.relations.map((relation, index) => ({
-        id: relation.id,
-        data: { character: relation, type: 'target' },
-        position: calculeCirclePosition(center, index),
-        type: 'character',
-        origin: [0.5, 0.5],
-      })),
-    ]);
+    if (character?.id) {
+      const center = { x: sizes.width / 2, y: sizes.height / 2 };
+      setCenterCoords(center);
+      setNodes([
+        {
+          id: 'background-circle-1',
+          type: 'circle',
+          position: center,
+          data: { radius },
+          style: { zIndex: -1 },
+          origin: [0.5, 0.5],
+        },
+        {
+          id: character?.id,
+          data: { character, type: 'source' },
+          position: center,
+          type: 'character',
+          origin: [0.5, 0.5],
+        },
+        ...(
+          character?.relations?.map((relation, index) => ({
+            id: relation.id,
+            data: { character: relation, type: 'target' },
+            position: calculeCirclePosition(center, index),
+            type: 'character',
+            origin: [0.5, 0.5],
+          })) ?? []
+        ),
+      ]);
+    }
   }, [character, sizes]);
 
   useEffect(() => {
-    if (nodes.length) {
+    if (nodes.length && character?.id) {
       setEdges(
-        character?.relations.map((relation) => ({
+        character?.relations?.map((relation) => ({
           id: `${character.id}_${relation.id}`,
           source: character.id,
           target: relation.id,
@@ -156,7 +163,17 @@ export default function CircularRelation({ character }) {
         })),
       );
     }
-  }, [nodes]);
+  }, [nodes, character?.id]);
+
+  useEffect(() => {
+    const fetchCharacter = async () => {
+      const character = await getCharacterContext(id, date.timestamp);
+      setCharacter(character);
+    };
+    if (date) {
+      fetchCharacter();
+    }
+  }, [id, date]);
 
   return (
     <div className="w-full h-[60vh] relative">

@@ -4,13 +4,13 @@ import { getFullname } from "@root/lib/decorators/character.helper";
 import { CircularProvider } from "@root/contexts/CircularContext";
 import HeadDate from "@root/components/CircularRelation/HeadDate";
 import Timeline from "@root/components/CircularRelation/Timeline";
-import { getCharacterContext } from "@root/actions/character";
+import { getCharacter } from "@root/actions/character";
 import { getEvents } from "@root/actions/event";
 
 
 export default async function CharacterPage({ params }) {
   const { id } = await params;
-  const character = await getCharacterContext(id);
+  const character = await getCharacter(id);
   const events = await getEvents();
 
   if (!character) {
@@ -24,7 +24,7 @@ export default async function CharacterPage({ params }) {
         <div className="text-lg font-bold text-center mt-4 mb-8">
           <HeadDate />
         </div>
-        <CircularRelation character={character} />
+        <CircularRelation id={id} />
         <div className="mt-16">
           <Timeline events={events} />
         </div>

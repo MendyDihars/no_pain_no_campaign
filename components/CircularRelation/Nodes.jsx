@@ -8,6 +8,7 @@ import {
 import { useCircular } from '@root/contexts/CircularContext';
 import Tooltip from '../ui/Tooltip';
 import DATime from '@root/lib/da-time';
+import { useMemo } from 'react';
 
 export function BackgroundCircleNode({ data: { radius } }) {
   return (
@@ -30,10 +31,17 @@ export function BackgroundCircleNode({ data: { radius } }) {
 export function CharacterNode({ data: { character, type } }) {
   const { date } = useCircular();
 
-  const age = character?.birthdate ? DATime.getAge(character?.birthdate, date) : '??';
+  const age = useMemo(() => {
+    if (!character?.birthdate) return '??';
+    const age = DATime.getAge(character?.birthdate, date);
+    if (age < 0) return 'Pas né/e';
+    if (age === 0) return 'Bébé (0-1 an)';
+    if (age === 1) return '1 an';
+    return `${age} ans`;
+  }, [character?.birthdate, date]);
 
   return (
-    <Tooltip content={`${getFullname(character)} - ${age} ans`}>
+    <Tooltip content={`${getFullname(character)} - ${age}`}>
       <Link href={`/characters/${character?.id}`} className="relative">
         <div className="absolute top-[-20px] left-[-20px] text-white text-xs w-[100px]">
           <div className="text-center">
