@@ -10,6 +10,7 @@
 
 :root {
   --npng-black: #0f0e0c;
+  --npng-black-light: #291720;
   --npng-white: #efebe2;
   --npng-red: #a5402d;
   --npng-yellow: #fbd1a2;
@@ -17,6 +18,7 @@
   --primary: var(--npng-red);
   --secondary: var(--npng-yellow);
   --background: var(--npng-black);
+  --background-light: var(--npng-black-light);
   --foreground: var(--npng-white);
   --radius: 0.625rem;
 
@@ -58,6 +60,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-light: var(--background-light);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);

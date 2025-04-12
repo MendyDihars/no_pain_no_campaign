@@ -9,8 +9,8 @@ import { getEvents } from "@root/actions/event";
 import { getTranslations } from "next-intl/server";
 
 export default async function CharacterPage({ params }) {
-  const [{ id }, character, events, t] = await Promise.all([
-    params,
+  const { id } = await params;
+  const [character, events, t] = await Promise.all([
     getCharacter(id),
     getEvents(),
     getTranslations(),

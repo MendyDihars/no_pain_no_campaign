@@ -9,7 +9,7 @@ export default async function CharactersPage() {
     <div className="p-4 flex flex-col gap-4"  >
       {characters.map((character) => (
         <div key={character.id}>
-          <Link href={`/characters/${character.id}`}>
+          <Link href={`/links/${character.id}`}>
             {getFullname(character)}
           </Link>
         </div>

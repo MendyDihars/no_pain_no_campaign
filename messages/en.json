@@ -2,11 +2,14 @@
   "Sidebar": {
     "Wiki": "Wiki",
     "Calendar": "Calendar",
-    "Links": "Characters",
+    "Links": "Links",
     "Home": "Home"
   },
   "Home": {
-    "slogan": "The <i>longest</i> DnD campaign in the <i>Dragon Age</i> universe"
+    "slogan": "The <i>longest</i><br></br>TTRPG campaign<br></br> in the <i>Dragon Age</i> universe",
+    "readAdventure": "Read the adventure",
+    "chainsBreakers": "The Chains Breakers",
+    "chainsBreakersDescription": "Coming from the four corners of Thedas, these brave heroes are on the verge of changing the world..."
   },
   "CircularRelation": {
     "symmetricalStructure": "Symmetrical Structure"

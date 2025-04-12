@@ -21,22 +21,22 @@ export default function Sidebar() {
   }
 
   return (
-    <nav className="w-full bg-background px-8 text-white flex">
-      <div className="flex gap-4 flex-1 items-center">
+    <nav className="w-full bg-background-light h-12 px-8 text-white flex">
+      <div className="flex gap-6 flex-1 items-center">
         <section>
           <Link href="/" className={
             cn(
-              'text-secondary hover:text-primary transition-all duration-300 p-2',
+              'text-secondary hover:text-primary transition-all duration-300 px-2',
               isActive('/') ? 'text-primary' : ''
             )
           }>
-            <HomeIcon className="w-5 h-5" />
+            <HomeIcon className="w-5 h-5 p-0 m-0" />
           </Link>
         </section>
         <section>
           <Link href="/wiki" className={
             cn(
-              'text-secondary hover:text-primary transition-all duration-300 p-2',
+              'text-secondary hover:text-primary transition-all duration-300 px-2',
               isActive('/wiki') ? 'text-primary' : ''
             )
           }>
@@ -46,7 +46,7 @@ export default function Sidebar() {
         <section>
           <Link href="/calendar" className={
             cn(
-              'text-secondary hover:text-primary transition-all duration-300 p-2',
+              'text-secondary hover:text-primary transition-all duration-300 px-2',
               isActive('/calendar') ? 'text-primary' : ''
             )
           }>
@@ -54,10 +54,10 @@ export default function Sidebar() {
           </Link>
         </section>
         <section>
-          <Link href="/characters" className={
+          <Link href="/links" className={
             cn(
-              'text-secondary hover:text-primary transition-all duration-300 p-2',
-              isActive('/characters') ? 'text-primary' : ''
+              'text-secondary hover:text-primary transition-all duration-300 px-2',
+              isActive('/links') ? 'text-primary' : ''
             )
           }>
             {t("Sidebar.Links")}
@@ -65,7 +65,7 @@ export default function Sidebar() {
         </section>
       </div>
       {data?.user ? (
-        <Logout className="text-secondary hover:text-primary transition-all duration-300 p-2" />
+        <Logout className="text-secondary hover:text-primary transition-all duration-300 px-2" />
       ) : null}
     </nav>
   );

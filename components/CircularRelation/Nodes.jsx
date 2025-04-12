@@ -44,7 +44,7 @@ export function CharacterNode({ data: { character, type } }) {
 
   return (
     <Tooltip content={`${getFullname(character)} - ${age}`}>
-      <Link href={`/characters/${character?.id}`} className="relative">
+      <Link href={`/links/${character?.id}`} className="relative">
         <div className="absolute top-[-20px] left-[-20px] text-white text-xs w-[100px]">
           <div className="text-center">
             {getFullname(character)}

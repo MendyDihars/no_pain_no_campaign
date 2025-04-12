@@ -2,11 +2,14 @@
   "Sidebar": {
     "Wiki": "Wiki",
     "Calendar": "Calendrier",
-    "Links": "Personnages",
+    "Links": "Liens",
     "Home": "Accueil"
   },
   "Home": {
-    "slogan": "La <i>plus longue campagne</i> JDR dans l'univers de <i>Dragon Age</i>"
+    "slogan": "La <i>plus longue</i><br></br>campagne JDR<br></br> dans l'univers<br></br> de <i>Dragon Age</i>",
+    "readAdventure": "Lire l'aventure",
+    "chainsBreakers": "Les Briseurs de Chaines",
+    "chainsBreakersDescription": "Venant des quatres coins de Thédas, ces braves héros sont en passe de changer le monde..."
   },
   "CircularRelation": {
     "symmetricalStructure": "Structure symétrique"
