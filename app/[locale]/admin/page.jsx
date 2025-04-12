@@ -1,11 +1,13 @@
 import { getUser } from "@root/lib/user";
+import { getTranslations } from "next-intl/server";
 
 export default async function Page() {
+  const t = await getTranslations();
   const user = await getUser();
 
   return (
     <div>
-      <h1>Hello {user?.name}</h1>
+      <h1>{t('hello')} {user?.name}</h1>
     </div>
   );
 }
