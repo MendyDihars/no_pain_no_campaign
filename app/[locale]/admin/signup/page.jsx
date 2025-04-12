@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { signUp } from '@root/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
+import { useTranslations } from 'next-intl';
 
 export default function Signup() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function Signup() {
     password: '',
     confirmPassword: '',
   });
+  const t = useTranslations();
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -64,9 +66,9 @@ export default function Signup() {
         className="w-full max-w-md p-8 space-y-8 bg-transparent rounded-xl shadow-lg"
       >
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-white">Créer un compte</h2>
+          <h2 className="text-3xl font-bold text-white">{t('Signup.createAccount')}</h2>
           <p className="mt-2 text-sm text-white">
-            Rejoignez-nous et commencez votre voyage
+            {t('Signup.welcome')}
           </p>
         </div>
 
@@ -75,7 +77,7 @@ export default function Signup() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-white">
-                  Prénom
+                  {t('Signup.firstName')}
                 </label>
                 <input
                   id="firstName"
@@ -90,7 +92,7 @@ export default function Signup() {
               </div>
               <div>
                 <label htmlFor="lastName" className="block text-sm font-medium text-white">
-                  Nom
+                  {t('Signup.lastName')}
                 </label>
                 <input
                   id="lastName"
@@ -107,7 +109,7 @@ export default function Signup() {
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-white">
-                Email
+                {t('Signup.email')}
               </label>
               <input
                 id="email"
@@ -123,7 +125,7 @@ export default function Signup() {
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-white">
-                Mot de passe
+                {t('Signup.password')}
               </label>
               <input
                 id="password"
@@ -139,7 +141,7 @@ export default function Signup() {
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-white">
-                Confirmer le mot de passe
+                {t('Signup.confirmPassword')}
               </label>
               <input
                 id="confirmPassword"
@@ -163,10 +165,7 @@ export default function Signup() {
               className="h-4 w-4 text-white focus:ring-secondary border-gray-300 rounded"
             />
             <label htmlFor="terms" className="ml-2 block text-sm text-white">
-              J'accepte les{' '}
-              <a href="#" className="text-white hover:text-gray-300">
-                conditions d'utilisation
-              </a>
+              {t('Signup.terms')}
             </label>
           </div>
 
@@ -176,15 +175,15 @@ export default function Signup() {
             type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary"
           >
-            S'inscrire
+            {t('Signup.signupButton')}
           </motion.button>
 
           <div className="flex justify-end gap-2 text-xs text-white">
             <div>
-              Déjà un compte ?
+              {t('Signup.alreadyAccount')}
             </div>
             <a href="/admin/login" className="text-white hover:text-gray-300">
-              Se connecter
+              {t('Signup.login')}
             </a>
           </div>
         </form>

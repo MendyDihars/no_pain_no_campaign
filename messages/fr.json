@@ -1,3 +1,50 @@
 {
-  "hello": "Bonjour"
+  "Sidebar": {
+    "Wiki": "Wiki",
+    "Calendar": "Calendrier",
+    "Links": "Personnages",
+    "Home": "Accueil"
+  },
+  "Home": {
+    "slogan": "La <i>plus longue campagne</i> JDR dans l'univers de <i>Dragon Age</i>"
+  },
+  "CircularRelation": {
+    "symmetricalStructure": "Structure symétrique"
+  },
+  "Nodes": {
+    "notBorn": "Pas né/e",
+    "baby": "Bébé (0-1 an)",
+    "oneYearOld": "1 an",
+    "age": "{age} ans"
+  },
+  "Timeline": {
+    "loading": "Chargement"
+  },
+  "Login": {
+    "login": "Connexion",
+    "welcome": "Bienvenue ! Veuillez vous connecter à votre compte",
+    "email": "Email",
+    "password": "Mot de passe",
+    "rememberMe": "Se souvenir de moi",
+    "loginButton": "Connexion",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Pas de compte ?",
+    "signup": "S'enregistrer"
+  },
+  "Signup": {
+    "createAccount": "Créer un compte",
+    "welcome": "Rejoignez-nous et commencez votre voyage",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "terms": "J'accepte les conditions d'utilisation",
+    "signupButton": "S'inscrire",
+    "alreadyAccount": "Déjà un compte ?",
+    "login": "Se connecter"
+  },
+  "CharacterPage": {
+    "noCharacter": "Aucun personnage présent"
+  }
 }

@@ -15,10 +15,7 @@ export default function Logout({ className }) {
 
   return (
     <div className={cn("flex gap-2 text-sm items-center cursor-pointer", className)} onClick={handleLogout}>
-      <LogOutIcon className="w-4 h-4" />
-      <div>
-        Déconnexion
-      </div>
+      <LogOutIcon className="w-5 h-5" />
     </div>
   )
 }

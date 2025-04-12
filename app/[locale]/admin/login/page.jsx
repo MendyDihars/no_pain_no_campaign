@@ -6,12 +6,13 @@ import Button from '@root/components/ui/Button';
 import { signIn } from '@root/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';  
+import { useTranslations } from 'next-intl';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-
+  const t = useTranslations();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -23,6 +24,7 @@ export default function Login() {
       toast.error(res.error.message);
     } else {
       toast.success('Connexion réussie');
+      router.refresh();
       router.push('/admin');
     }
   };
@@ -36,9 +38,9 @@ export default function Login() {
         className="w-full max-w-md p-8 space-y-8 bg-transparent rounded-xl"
       >
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-white">Connexion</h2>
+          <h2 className="text-3xl font-bold text-white">{t('Login.welcome')}</h2>
           <p className="mt-2 text-sm text-white">
-            Bienvenue ! Veuillez vous connecter à votre compte
+            {t('Login.welcome')}
           </p>
         </div>
 
@@ -46,7 +48,7 @@ export default function Login() {
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-white">
-                Email
+                {t('Login.email')}
               </label>
               <input
                 id="email"
@@ -62,7 +64,7 @@ export default function Login() {
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-white">
-                Mot de passe
+                {t('Login.password')}
               </label>
               <input
                 id="password"
@@ -86,28 +88,28 @@ export default function Login() {
                 className="h-4 w-4 text-white focus:ring-secondary border-gray-300 rounded"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-white">
-                Se souvenir de moi
+                {t('Login.rememberMe')}
               </label>
             </div>
 
             <div className="text-sm">
               <a href="#" className="font-medium text-white hover:text-gray-300">
-                Mot de passe oublié ?
+                {t('Login.forgotPassword')}
               </a>
             </div>
           </div>
 
           <Button type="submit">
-            Se connecter
+            {t('Login.loginButton')}
           </Button>
         </form>
 
         <div className="flex items-center justify-end gap-2 text-xs">
           <div>
-            Pas de compte ?
+            {t('Login.noAccount')}
           </div>
           <a href="/admin/signup" className="text-white hover:text-gray-300">
-            S'enregistrer
+            {t('Login.signup')}
           </a>
         </div>
       </motion.div>

@@ -12,7 +12,7 @@ export default async function Layout({ children, params }) {
   if (!hasLocale(routing.locales, locale)) notFound();
 
   return (
-    <body className="bg-background flex flex-col h-screen">
+    <div className="bg-background h-screen flex flex-col">
       <NextIntlClientProvider>
         <Toaster position="bottom-center" />
         <Sidebar />
@@ -31,6 +31,6 @@ export default async function Layout({ children, params }) {
           </p>
         </footer>
       </NextIntlClientProvider>
-    </body>
+    </div>
   )
 }

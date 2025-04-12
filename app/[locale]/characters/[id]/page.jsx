@@ -6,15 +6,18 @@ import HeadDate from "@root/components/CircularRelation/HeadDate";
 import Timeline from "@root/components/CircularRelation/Timeline";
 import { getCharacter } from "@root/actions/character";
 import { getEvents } from "@root/actions/event";
-
+import { getTranslations } from "next-intl/server";
 
 export default async function CharacterPage({ params }) {
-  const { id } = await params;
-  const character = await getCharacter(id);
-  const events = await getEvents();
+  const [{ id }, character, events, t] = await Promise.all([
+    params,
+    getCharacter(id),
+    getEvents(),
+    getTranslations(),
+  ]);
 
   if (!character) {
-    return <div>Personnage non trouvé</div>;
+    return <div>{t('CharacterPage.noCharacter')}</div>;
   }
 
   return (

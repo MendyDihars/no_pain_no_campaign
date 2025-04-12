@@ -1,15 +1,30 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* @custom-variant dark (&:is(.dark *)); */
+
+/* Black : #0f0e0c */
+/* White : #efebe2 */
+/* Red : #a5402d */
+/* Yellow : #fbd1a2 */
 
 :root {
-  --primary: oklch(0.205 0 0);
+  --npng-black: #0f0e0c;
+  --npng-white: #efebe2;
+  --npng-red: #a5402d;
+  --npng-yellow: #fbd1a2;
+
+  --primary: var(--npng-red);
+  --secondary: var(--npng-yellow);
+  --background: var(--npng-black);
+  --foreground: var(--npng-white);
+  --radius: 0.625rem;
+
+  /* --primary: oklch(0.205 0 0);
   --secondary: oklch(0.97 0 0);
   --black: #09090b;
   --red: #8C271E;
   --blue: #87F1FF;
-  --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -38,12 +53,12 @@
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: oklch(0.708 0 0); */
 }
 
 @theme inline {
-  --color-background: var(--black);
-  --color-foreground: var(--blue);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --font-sans: var(--font-geist-sans);
@@ -85,7 +100,7 @@
   --xy-background-pattern-dots-color-default: var(--black) !important;
 } */
 
-.dark {
+/* .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -117,6 +132,10 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+} */
+
+.light {
+  @theme light;
 }
 
 @layer base {

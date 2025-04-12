@@ -13,6 +13,7 @@ import { edgeTypes } from './Edges';
 import '@xyflow/react/dist/style.css';
 import { getCharacterContext } from '@root/actions/character';
 import { useCircular } from '@root/contexts/CircularContext';
+import { useTranslations } from 'next-intl';
 
 const minDistance = 0.75;
 
@@ -30,6 +31,7 @@ export default function CircularRelation({ id }) {
   const [centerCoords, setCenterCoords] = useState({});
   const [character, setCharacter] = useState();
   const radius = 200;
+  const t = useTranslations();
 
   function toggleAngles() {
     setIsRandomAngles((prev) => !prev);
@@ -107,8 +109,8 @@ export default function CircularRelation({ id }) {
   useEffect(() => {
     const handleResize = () => {
       setSizes({
-        width: Math.round(document.body.clientWidth),
-        height: Math.round(document.body.clientHeight * 0.9),
+        width: Math.round(ref.current.clientWidth),
+        height: Math.round(ref.current.clientHeight * 0.9),
       }); 
     };
     handleResize();
@@ -178,7 +180,9 @@ export default function CircularRelation({ id }) {
   return (
     <div className="w-full h-[60vh] relative">
       <div className="flex items-center mb-2">
-        <Label htmlFor="equal-angles" className="me-2">Structure symétrique</Label>
+        <Label htmlFor="equal-angles" className="me-2">
+          {t("CircularRelation.symmetricalStructure")}
+        </Label>
         <Switch id="equal-angles" onCheckedChange={toggleAngles} className="cursor-pointer" />
       </div>
       <ReactFlow

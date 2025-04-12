@@ -6,10 +6,11 @@ import {
   useMemo,
   useRef,
 } from 'react';
+import { useTranslations } from 'next-intl';
+import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import DATime from '@root/lib/da-time';
 import { useCircular } from '@root/contexts/CircularContext';
-import Tooltip from '../ui/Tooltip';
-import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import Tooltip from '@root/components/ui/Tooltip';
 
 const colors = [
   'bg-fuchsia-400',
@@ -112,7 +113,9 @@ export default function Timeline({ events: storedEvents }) {
   const ref = useRef(null);
   const [isClientLoaded, setIsClientLoaded] = useState(false);
   const { date, setDate } = useCircular();
+  const t = useTranslations();
   
+
   const yearSplitted = useMemo(() => {
     if (!date?.year) return ['0', '0', '0', '0'];
     const splitted = DATime.convertYearToString(date.year).replace(/:/, '').split('');
@@ -153,5 +156,5 @@ export default function Timeline({ events: storedEvents }) {
         <TimelineDayCalendar calendar={calendar} events={events} setDate={setDate} />
       </div>
     </div>
-  ) : (<span>Loading...</span>);
+  ) : (<span>{t('Timeline.loading')}...</span>);
 }

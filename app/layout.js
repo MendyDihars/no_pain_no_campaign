@@ -1,10 +1,5 @@
-import { Lato } from 'next/font/google';
+import { lato } from '@root/lib/fonts';
 import './globals.css';
-
-const lato = Lato({
-  weight: ['100', '300', '400', '700', '900'],
-  subsets: ['latin'],
-});
 
 export const metadata = {
   title: 'No Pain No Campaign',
@@ -13,8 +8,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fr" className={`dark ${lato.className}`}>
-      {children}
+    <html lang="fr" className={lato.className}>
+      <body>
+        {children}
+      </body>
     </html>
   );
 }

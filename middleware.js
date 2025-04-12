@@ -5,14 +5,19 @@ import { routing } from './i18n/routing';
  
 const i18nMiddleware = createMiddleware(routing);
  
-const allowedRoutes = ['/admin/login', '/admin/signup'];
+const localeRegex = `(${routing.locales.join('|')})`;
+
+const allowedRoutes = ['/admin/login', '/admin/signup']
+  .map((route) => (
+    new RegExp(`^/${localeRegex}${route}`)
+  ));
 
 function authMiddleware(request, response) {
   const cookie = getSessionCookie(request);
   const { pathname } = request.nextUrl;
-
-  if (pathname.startsWith('/admin') && !allowedRoutes.includes(pathname) && !cookie) {
-    return NextResponse.redirect(new URL('/admin/login', request.url));
+  const locale = pathname.match(localeRegex)?.[0] ?? routing.defaultLocale;
+  if (pathname.includes('admin') && !allowedRoutes.some((route) => pathname.match(route)) && !cookie) {
+    return NextResponse.redirect(new URL(`/${locale}/admin/login`, request.url));
   }
 
   return response;
@@ -20,6 +25,10 @@ function authMiddleware(request, response) {
 
 export default function middleware(request) {
   const response = i18nMiddleware(request);
+
+  const { pathname } = request.nextUrl;
+  
+  response.cookies.set('x-current-pathname', pathname);
 
   if (!response?.ok) return response;
 

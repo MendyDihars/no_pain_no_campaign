@@ -9,6 +9,7 @@ import { useCircular } from '@root/contexts/CircularContext';
 import Tooltip from '../ui/Tooltip';
 import DATime from '@root/lib/da-time';
 import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 
 export function BackgroundCircleNode({ data: { radius } }) {
   return (
@@ -30,14 +31,15 @@ export function BackgroundCircleNode({ data: { radius } }) {
 
 export function CharacterNode({ data: { character, type } }) {
   const { date } = useCircular();
+  const t = useTranslations();
 
   const age = useMemo(() => {
     if (!character?.birthdate) return '??';
     const age = DATime.getAge(character?.birthdate, date);
-    if (age < 0) return 'Pas né/e';
-    if (age === 0) return 'Bébé (0-1 an)';
-    if (age === 1) return '1 an';
-    return `${age} ans`;
+    if (age < 0) return t('Nodes.notBorn');
+    if (age === 0) return t('Nodes.baby');
+    if (age === 1) return t('Nodes.oneYearOld');
+    return t('Nodes.age', { age });
   }, [character?.birthdate, date]);
 
   return (

@@ -1,3 +1,50 @@
 {
-  "hello": "Hello"
+  "Sidebar": {
+    "Wiki": "Wiki",
+    "Calendar": "Calendar",
+    "Links": "Characters",
+    "Home": "Home"
+  },
+  "Home": {
+    "slogan": "The <i>longest</i> DnD campaign in the <i>Dragon Age</i> universe"
+  },
+  "CircularRelation": {
+    "symmetricalStructure": "Symmetrical Structure"
+  },
+  "Nodes": {
+    "notBorn": "Not born",
+    "baby": "Baby (0-1 year)",
+    "oneYearOld": "1 year old",
+    "age": "{age} years old"
+  },
+  "Timeline": {
+    "loading": "Loading"
+  },
+  "Login": {
+    "login": "Login",
+    "welcome": "Welcome ! Please login to your account",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "loginButton": "Login",
+    "forgotPassword": "Forgot password ?",
+    "noAccount": "No account ?",
+    "signup": "Signup"
+  },
+  "Signup": {
+    "createAccount": "Create an account",
+    "welcome": "Join us and start your journey",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "terms": "I accept the terms of use",
+    "signupButton": "Signup",
+    "alreadyAccount": "Already have an account ?",
+    "login": "Login"
+  },
+  "CharacterPage": {
+    "noCharacter": "No character present"
+  }
 }
