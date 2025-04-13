@@ -11,6 +11,7 @@ import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import DATime from '@root/lib/da-time';
 import { useCircular } from '@root/contexts/CircularContext';
 import Tooltip from '@root/components/ui/Tooltip';
+import { roxborough } from '@root/lib/fonts';
 
 const colors = [
   'bg-fuchsia-400',
@@ -46,10 +47,10 @@ function NumberInput({ value, onChange, min = 0 }) {
   }
 
   return (
-    <div className="flex flex-col items-center">
-      <ChevronUpIcon className="cursor-pointer hover:bg-gray-900 rounded-full p-1" onClick={handleChangeUp} />
+    <div className={`flex flex-col items-center ${roxborough.className} text-3xl`}>
+      <ChevronUpIcon className="cursor-pointer h-8 w-8 hover:bg-gray-900 rounded-full p-1" onClick={handleChangeUp} />
       {val}
-      <ChevronDownIcon className="cursor-pointer hover:bg-gray-900 rounded-full p-1" onClick={handleChangeDown} />
+      <ChevronDownIcon className="cursor-pointer h-8 w-8 hover:bg-gray-900 rounded-full p-1" onClick={handleChangeDown} />
     </div>
   )
 }
@@ -70,7 +71,7 @@ function TimelineDayCalendar({ calendar, events }) {
     <>
       {calendar.byMonth.map((month, i) => (
         <div ref={ref} key={month[0].format} className="flex flex-col justify-center items-start">
-          <div>{month[0].monthName}</div>
+          <div className={`${roxborough.className} text-2xl text-secondary`}>{month[0].monthName}</div>
           <div className={`h-[4px] w-full ${colors[i]} rounded-full`} />
           <div className="flex">
             {month.map((day) => {
@@ -79,8 +80,8 @@ function TimelineDayCalendar({ calendar, events }) {
                 <Tooltip
                   key={day.format}
                   content={(
-                    <div className="flex flex-col gap-2 items-center justify-center">
-                      <div className={`${event ? 'text-lg font-bold' : ''}`}>{day.date}</div>
+                    <div className="flex flex-col gap-2 text-lg items-center justify-center">
+                      <div className={`${event ? 'text-2xm font-bold' : ''}`}>{day.date}</div>
                       {event ? (
                         <div>
                           <div>{event.name}</div>
@@ -92,7 +93,7 @@ function TimelineDayCalendar({ calendar, events }) {
                 >
                 <div
                   data-id={day.timestamp}
-                  className={`w-10 h-10 font-bold border-1 flex justify-center items-center cursor-pointer rounded-b-lg ${event ? 'bg-cyan-900' : 'bg-secondary'}`}
+                  className={`w-10 h-10 text-xl border-1 flex justify-center items-center cursor-pointer rounded-b-lg ${roxborough.className} ${event ? 'bg-secondary text-background' : 'bg-primary text-foreground'}`}
                   onClick={() => setDate(new DATime(day.timestamp))}
                 >
                   <div className={`${day.timestamp === date.timestamp ? 'bg-white text-black h-full w-full rounded-b-lg flex justify-center items-center' : ''}`}>
@@ -145,7 +146,7 @@ export default function Timeline({ events: storedEvents }) {
 
   return isClientLoaded ? (
     <div>
-      <div className="flex items-center gap-2 mb-6">
+      <div className="flex items-center gap-1 ms-24 mb-6">
         <NumberInput value={yearSplitted[0]} onChange={handleYearChange(0)} />
         <NumberInput value={yearSplitted[1]} onChange={handleYearChange(1)} min={1} />
         :

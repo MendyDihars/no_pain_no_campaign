@@ -194,7 +194,7 @@ export default function CircularRelation({ id }) {
         zoomOnScroll={false}
         zoomOnPinch={false}
         zoomOnDoubleClick={false}
-        panOnDrag={false}
+        // panOnDrag={false}
         onEdgeMouseEnter={handleHoverEdge}
         onEdgeMouseLeave={handleHoverEdge}
       >

@@ -7,14 +7,14 @@ import {
   TooltipTrigger,
 } from "@root/components/ui/tooltip-primtive";
 
-export default function Tooltip({ children, content, contentProps, rootProps }) {
+export default function Tooltip({ children, content, side, align, rootProps }) {
   return (
     <TooltipProvider>
       <TooltipPrimitive {...rootProps}>
         <TooltipTrigger asChild>
           {children}
         </TooltipTrigger>
-        <TooltipContent {...contentProps}>
+        <TooltipContent side={side} align={align}>
           {content}
         </TooltipContent>
       </TooltipPrimitive>

@@ -1,9 +1,13 @@
 {
   "Sidebar": {
-    "Wiki": "Wiki",
-    "Calendar": "Calendar",
-    "Links": "Links",
-    "Home": "Home"
+    "codex": "Codex",
+    "calendar": "Calendar",
+    "links": "Links",
+    "gallery": "Gallery",
+    "rules": "Game rules",
+    "french": "French",
+    "english": "English",
+    "logout": "Logout"
   },
   "Home": {
     "slogan": "The <i>longest</i><br></br>TTRPG campaign<br></br> in the <i>Dragon Age</i><br></br> universe",
@@ -13,6 +17,9 @@
   },
   "CircularRelation": {
     "symmetricalStructure": "Symmetrical Structure"
+  },
+  "Links": {
+    "title": "Links"
   },
   "Nodes": {
     "notBorn": "Not born",

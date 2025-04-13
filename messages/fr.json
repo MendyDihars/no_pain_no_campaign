@@ -1,9 +1,13 @@
 {
   "Sidebar": {
-    "Wiki": "Wiki",
-    "Calendar": "Calendrier",
-    "Links": "Liens",
-    "Home": "Accueil"
+    "codex": "Codex",
+    "calendar": "Calendrier",
+    "links": "Liens",
+    "gallery": "Galerie",
+    "rules": "Règles du jeu",
+    "french": "Français",
+    "english": "Anglais",
+    "logout": "Déconnexion"
   },
   "Home": {
     "slogan": "La <i>plus longue</i><br></br>campagne JDR<br></br> dans l'univers<br></br> de <i>Dragon Age</i>",
@@ -13,6 +17,9 @@
   },
   "CircularRelation": {
     "symmetricalStructure": "Structure symétrique"
+  },
+  "Links": {
+    "title": "Liens"
   },
   "Nodes": {
     "notBorn": "Pas né/e",
