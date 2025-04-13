@@ -11,11 +11,15 @@ export default async function CharactersPage() {
 
   return (
     <div className="m-20">
-      <h1 className={`${roxborough.className} text-secondary text-4xl py-4`}>{t('Links.title')}</h1>
-      <div className="flex justify-start lg:justify-center gap-12 flex-wrap">
-        {characters.map((character) => (
-          <CircleCharacter key={character.id} name={getFullname(character)} />
-        ))}
+      <h1 className={`${roxborough.className} text-secondary text-4xl py-4`}>
+        {t('Links.title')}
+      </h1>
+      <div className="flex justify-start lg:justify-center">
+        <div className="flex flex-wrap gap-12">
+          {characters.map((character) => (
+            <CircleCharacter key={character.id} name={getFullname(character)} />
+          ))}
+        </div>
       </div>
     </div>
   );
