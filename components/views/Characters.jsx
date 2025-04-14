@@ -8,6 +8,7 @@ export default function Characters({ characters, prefixTo }) {
         {characters.map((character) => (
           <CircleCharacter prefixTo={prefixTo} key={character.id} name={getFullname(character)} id={character.id} />
         ))}
+        {/* <CircleCharacter prefixTo={prefixTo} name="Add new character" id="new" /> */}
       </div>
     </div>
   );

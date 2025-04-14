@@ -1,6 +1,7 @@
 {
   "General": {
-    "back": "Back"
+    "back": "Back",
+    "save": "Save"
   },
   "Admin": {
     "Characters": {
@@ -76,10 +77,14 @@
     "alreadyAccount": "Already have an account ?",
     "login": "Login"
   },
+  "Success": {
+    "characterSaved": "Character saved successfully"
+  },
   "CharacterPage": {
     "noCharacter": "No character present"
   },
   "Errors": {
-    "Unauthorized": "You are not authorized to perform this action"
+    "Unauthorized": "You are not authorized to perform this action",
+    "cantSaveCharacter": "Impossible to save character"
   }
 }

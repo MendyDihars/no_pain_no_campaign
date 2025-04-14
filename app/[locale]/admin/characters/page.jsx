@@ -10,7 +10,7 @@ export default async function AdminCharactersPage() {
 
   return (
     <div className="m-20">
-      <h1 className={`${roxborough.className} text-secondary text-4xl py-4`}>
+      <h1 className={`${roxborough.className} text-secondary text-4xl py-4 mb-20`}>
         {t('Admin.Characters.title')}
       </h1>
       <Characters prefixTo='/admin/characters' characters={characters} />

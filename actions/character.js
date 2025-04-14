@@ -5,10 +5,11 @@ import getCharacterRelationsQuery from "@root/lib/queries/characters/get-charact
 import { DEFAULT_DATE } from "@root/lib/decorators/character.helper";
 import { getUser } from "@root/lib/user";
 import ActionError from "@root/lib/ActionError";
+import { handle } from "@root/actions/errors";
 
 async function policy() {
   const user = await getUser();
-  if (!user || !user.role !== 'admin') throw new ActionError('Unauthorized', 'Unauthorized');
+  if (!user || user.role !== 'admin') throw new ActionError('Unauthorized', 'Unauthorized');
 }
 
 export async function getCharacter(id) {
@@ -47,23 +48,24 @@ export async function getCharacterContext(id, date) {
 
 // CRUD
 
-export async function createCharacter(character) {
-  const res = await handle(policy());
-  if (!res.success) return res;
-  const result = await handle(knex.insert(character).into('characters'));
-  return result;
-}
-
-export async function updateCharacter(id, character) {
-  const res = await handle(policy());
-  if (!res.success) return res;
-  const result = await handle(knex.update(character).where('id', id).from('characters'));
-  return result;
-}
 
 export async function deleteCharacter(id) {
   const res = await handle(policy());
   if (!res.success) return res;
   const result = await handle(knex.delete().where('id', id).from('characters'));
   return result;
+}
+
+export async function upsertCharacter({ character }) {
+  const res = await handle(policy());
+  if (!res.success) return res;
+
+  if (character.id) {
+    console.log('character', character)
+    const result = await handle(knex.update(character).where('id', character.id).from('characters'));
+    return result;
+  } else {
+    const result = await handle(knex.insert(character).into('characters'));
+    return result;
+  }
 }

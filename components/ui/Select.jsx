@@ -25,7 +25,7 @@ export default function Select({
       <SelectContent className={contentClassName}>
         <SelectGroup>
           {options.map(({ label, value }) => (
-            <SelectItem value={value} className={itemClassName}>{label}</SelectItem>
+            <SelectItem key={value} value={value} className={itemClassName}>{label}</SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>

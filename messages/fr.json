@@ -1,6 +1,7 @@
 {
   "General": {
-    "back": "Retour"
+    "back": "Retour",
+    "save": "Enregistrer"
   },
   "Admin": {
     "Characters": {
@@ -76,10 +77,14 @@
     "alreadyAccount": "Déjà un compte ?",
     "login": "Se connecter"
   },
+  "Success": {
+    "characterSaved": "Personnage enregistré avec succès"
+  },
   "CharacterPage": {
     "noCharacter": "Aucun personnage présent"
   },
   "Errors": {
-    "Unauthorized": "Vous n'êtes pas autorisé à accéder à faire cette action"
+    "Unauthorized": "Vous n'êtes pas autorisé à accéder à faire cette action",
+    "cantSaveCharacter": "Impossible d'enregistrer le personnage"
   }
 }
