@@ -1,4 +1,26 @@
 {
+  "General": {
+    "back": "Back"
+  },
+  "Admin": {
+    "Characters": {
+      "title": "Characters administration"
+    },
+    "Character": {
+      "firstname": "Firstname",
+      "lastname": "Lastname",
+      "birthdate": "Birthdate",
+      "gender": "Gender",
+      "sexualOrientation": "Sexual orientation",
+      "origin": "Origin",
+      "size": "Size",
+      "health": "Health",
+      "mana": "Mana",
+      "main": "Is it a main character",
+      "race": "Race",
+      "klass": "Class"
+    }
+  },
   "Sidebar": {
     "codex": "Codex",
     "calendar": "Calendar",
@@ -56,5 +78,8 @@
   },
   "CharacterPage": {
     "noCharacter": "No character present"
+  },
+  "Errors": {
+    "Unauthorized": "You are not authorized to perform this action"
   }
 }

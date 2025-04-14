@@ -1,4 +1,3 @@
-import knex, { DB } from "@root/lib/db";
 import CircularRelation from "@root/components/CircularRelation/CircularRelation";
 import { getFullname } from "@root/lib/decorators/character.helper";
 import { CircularProvider } from "@root/contexts/CircularContext";

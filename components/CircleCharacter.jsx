@@ -1,6 +1,8 @@
-export default function CircleCharacter({ name }) {
+import Link from "next/link";
+
+export default function CircleCharacter({ name, id, prefixTo }) {
   return (
-    <div>
+    <Link href={`${prefixTo ?? '/links'}/${id}`}>
       <div
         className="relative group overflow-hidden h-40 w-40 rounded-full text-background cursor-pointer"
       >
@@ -16,6 +18,6 @@ export default function CircleCharacter({ name }) {
       <div className="text-center text-foreground cursor-pointer z-20">
         {name}
       </div>
-    </div>
+    </Link>
   );
 }

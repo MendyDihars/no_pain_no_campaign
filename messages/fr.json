@@ -1,4 +1,26 @@
 {
+  "General": {
+    "back": "Retour"
+  },
+  "Admin": {
+    "Characters": {
+      "title": "Administration des personnages"
+    },
+    "Character": {
+      "firstname": "Prénom",
+      "lastname": "Nom",
+      "birthdate": "Date de naissance",
+      "gender": "Genre",
+      "sexualOrientation": "Orientation sexuelle",
+      "origin": "Origine",
+      "size": "Taille",
+      "health": "Santé",
+      "mana": "Mana",
+      "main": "Est-ce un personnage principal",
+      "race": "Race",
+      "klass": "Classe"
+    }
+  },
   "Sidebar": {
     "codex": "Codex",
     "calendar": "Calendrier",
@@ -56,5 +78,8 @@
   },
   "CharacterPage": {
     "noCharacter": "Aucun personnage présent"
+  },
+  "Errors": {
+    "Unauthorized": "Vous n'êtes pas autorisé à accéder à faire cette action"
   }
 }
