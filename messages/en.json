@@ -85,6 +85,6 @@
   },
   "Errors": {
     "Unauthorized": "You are not authorized to perform this action",
-    "cantSaveCharacter": "Impossible to save character"
+    "cantSaveCharacter": "Impossible to save character : {error}"
   }
 }

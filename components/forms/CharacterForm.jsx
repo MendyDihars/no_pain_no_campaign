@@ -5,7 +5,11 @@ import { useTranslations } from "next-intl";
 import Select from "@root/components/ui/Select";
 import DATime from "@root/lib/da-time";
 import { useForm } from "react-hook-form";
-import { upsertCharacter } from "@root/actions/character";
+import {
+  upsertCharacter,
+  updateCharacterBackground,
+  insertCharacterBackground,
+} from "@root/actions/character";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -25,25 +29,31 @@ export default function CharacterForm({ character, races, klasses }) {
   });
 
   const onSubmit = async (data) => {
+    let err;
     try {
       const res = await upsertCharacter({ character: {
         firstname: data.firstname,
         lastname: data.lastname,
         gender: data.gender,
         sexual_orientation: data.sexual_orientation,
-        // race_id: data.race_id,
-        // klass_id: data.klass_id,
         id: data.id,
       } });
       if (res.success) {
         router.refresh();
-        toast.success(t('Success.characterSaved'));
-      } else {
-        toast.error(res.error);
+        const action = data.id ? updateCharacterBackground : insertCharacterBackground;
+        const res2 = await action({
+          klass_id: data.klass_id,
+          race_id: data.race_id,
+          character_id: data.id
+        });
+        if (!res2.success) err = res2.error;
       }
+      else err = res.error;
     } catch (error) {
-      toast.error(t('Errors.cantSaveCharacter'));
+      err = t('Errors.cantSaveCharacter', { error: error.message });
     }
+    if (err) toast.error(err);
+    else toast.success(t('Success.characterSaved'));
   };
 
   return (
@@ -122,8 +132,8 @@ export default function CharacterForm({ character, races, klasses }) {
               options={klasses.map((klass) => ({ label: klass.name, value: klass.id }))}
               placeholder={t('Admin.Character.klass')}
               className="w-full text-md cursor-pointer md:w-1/2 border-0 border-l-1 md:border-l-0 md:border-r-1 rounded-none shadow-none border-secondary md:border-background px-4 py-2 active:border-none focus:outline-none text-right"
-              contentClassName="border-0"
-              itemClassName="cursor-pointer text-md"
+              contentClassName="border-0 bg-secondary text-background"
+              itemClassName="cursor-pointer text-md rounded-none bg-background text-secondary"
               value={watch('klass_id')}
               onChange={(value) => setValue('klass_id', value)}
             />

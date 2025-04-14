@@ -6,6 +6,7 @@ import { DEFAULT_DATE } from "@root/lib/decorators/character.helper";
 import { getUser } from "@root/lib/user";
 import ActionError from "@root/lib/ActionError";
 import { handle } from "@root/actions/errors";
+import { compact } from "lodash";
 
 async function policy() {
   const user = await getUser();
@@ -61,11 +62,31 @@ export async function upsertCharacter({ character }) {
   if (!res.success) return res;
 
   if (character.id) {
-    console.log('character', character)
     const result = await handle(knex.update(character).where('id', character.id).from('characters'));
     return result;
   } else {
     const result = await handle(knex.insert(character).into('characters'));
     return result;
   }
+}
+
+export async function updateCharacterBackground({ character_id, klass_id, race_id }) {
+  const res = await handle(policy());
+  if (!res.success) return res;
+  const payload = {};
+  if (klass_id) payload.klass_id = klass_id;
+  if (race_id) payload.race_id = race_id;
+  const result = await handle(
+    knex.update(payload).where('character_id', character_id).from('character_backgrounds')
+  );
+  return result;
+}
+
+export async function insertCharacterBackground({ klass_id, race_id, character_id }) {
+  const res = await handle(policy());
+  if (!res.success) return res;
+  const result = await handle(
+    knex.insert({ klass_id, race_id, character_id }).into('character_backgrounds')
+  );
+  return result;
 }

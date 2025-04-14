@@ -16,9 +16,10 @@ export default function Select({
   itemClassName,
   contentClassName,
   value,
+  onChange,
 }) {
   return (
-    <SelectPrimitive id={id} value={value}>
+    <SelectPrimitive id={id} value={value} onValueChange={onChange}>
       <SelectTrigger className={className}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
