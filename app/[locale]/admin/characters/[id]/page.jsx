@@ -1,30 +1,66 @@
-import { getFullCharacter } from "@root/actions/character";
+import { getFullCharacter, getCharacters } from "@root/actions/character";
 import { getRaces, getKlasses } from "@root/actions/background";
 import { roxborough } from "@root/lib/fonts";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { ChevronLeftIcon } from "lucide-react";
 import CharacterForm from "@root/components/forms/CharacterForm";
+import { getRelations } from "@root/actions/relation";
+import Select from "@root/components/ui/Select";
 
 export default async function AdminCharacterPage({ params }) {
   const { id } = await params;
-  const [character, races, klasses, t] = await Promise.all([
+  const [
+    character,
+    races,
+    klasses,
+    t,
+    relations,
+    characters,
+  ] = await Promise.all([
     getFullCharacter(id),
     getRaces(),
     getKlasses(),
-    getTranslations()
+    getTranslations(),
+    getRelations(id),
+    getCharacters(),
   ]);
+
+  const options = characters?.data?.map((character) => ({
+    label: `${character.firstname}${character.lastname ? ` ${character.lastname}` : ''}`,
+    value: character.id,
+  }));
+
   return (
     <div className="h-full w-full p-20 bg-gradient-to-br from-black to-secondary">
       <Link href="/admin/characters" className="text-foreground flex items-center gap-1 text-lg">
         <ChevronLeftIcon className="w-5 h-5" />
         {t('General.back')}
       </Link>
-      <div className={`${roxborough.className} text-secondary text-4xl mt-12`}>
-        {character.firstname} {character.lastname}
+      <div className="flex justify-between items-center">
+        <div className={`${roxborough.className} text-secondary text-4xl mt-12`}>
+          {character.firstname} {character.lastname}
+        </div>
+        {character.avatar_url ? (
+          <img src={character.avatar_url} alt={`${character.firstname} ${character.lastname}`} className="w-50 h-50 border-3 border-background rounded-full" />
+        ) : (
+          <div className="w-50 h-50 border-3 border-background bg-gradient-to-br from-foreground to-secondary rounded-full flex items-center justify-center" />
+        )}
       </div>
-
       <CharacterForm character={character} races={races} klasses={klasses} />
+      <div className={`text-secondary text-lg mt-20 mb-6 ${roxborough.className}`}>
+        {t('Admin.Characters.relationships')}
+      </div>
+      <div className="flex flex-col gap-6">
+        {relations?.data?.map((relation) => (
+          <Select
+            className="w-56 border-0 rounded-none cursor-pointer"
+            key={relation.id}
+            options={options}
+            value={relation.recipient_id}
+          />
+        ))}
+      </div>
     </div>
   );
 }

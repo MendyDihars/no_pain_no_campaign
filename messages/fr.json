@@ -5,7 +5,9 @@
   },
   "Admin": {
     "Characters": {
-      "title": "Administration des personnages"
+      "title": "Administration des personnages",
+      "new": "Nouveau personnage",
+      "relationships": "Relations"
     },
     "Character": {
       "firstname": "Prénom",
@@ -19,7 +21,9 @@
       "mana": "Mana",
       "main": "Est-ce un personnage principal",
       "race": "Race",
-      "klass": "Classe"
+      "klass": "Classe",
+      "avatar": "Avatar",
+      "card": "Carte de personnage"
     }
   },
   "Sidebar": {

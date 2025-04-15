@@ -1,16 +1,15 @@
 'use server';
 
+import { v4 as uuid } from 'uuid';
 import knex from "@root/lib/db";
 import getCharacterRelationsQuery from "@root/lib/queries/characters/get-character-relations";
 import { DEFAULT_DATE } from "@root/lib/decorators/character.helper";
-import { getUser } from "@root/lib/user";
-import ActionError from "@root/lib/ActionError";
-import { handle } from "@root/actions/errors";
-import { compact } from "lodash";
+import { handle, policy } from "@root/actions/errors";
+import { uploadImage } from "./image";
 
-async function policy() {
-  const user = await getUser();
-  if (!user || user.role !== 'admin') throw new ActionError('Unauthorized', 'Unauthorized');
+export async function getCharacters() {
+  const result = await handle(knex.select('*').from('characters').orderBy('firstname', 'asc'));
+  return result;
 }
 
 export async function getCharacter(id) {
@@ -26,9 +25,11 @@ export async function getFullCharacter(id) {
       'klasses.name as klass',
       'races.id as race_id',
       'klasses.id as klass_id',
+      'images.url as avatar_url'
     )
     .from('characters')
     .where('characters.id', id)
+    .leftJoin('images', 'characters.avatar_id', 'images.id')
     .leftJoin('character_backgrounds', 'characters.id', 'character_backgrounds.character_id')
     .leftJoin('races', 'character_backgrounds.race_id', 'races.id')
     .leftJoin('klasses', 'character_backgrounds.klass_id', 'klasses.id')
@@ -61,11 +62,17 @@ export async function upsertCharacter({ character }) {
   const res = await handle(policy());
   if (!res.success) return res;
 
+  if (Array.isArray(character.avatar_id)) {
+    const [file] = character.avatar_id;
+    const avatarRes = await handle(uploadImage(file));
+    character.avatar_id = avatarRes.data?.id;
+  }
+
   if (character.id) {
     const result = await handle(knex.update(character).where('id', character.id).from('characters'));
     return result;
   } else {
-    const result = await handle(knex.insert(character).into('characters'));
+    const result = await handle(knex.insert({...character, id: uuid()}).into('characters'));
     return result;
   }
 }
@@ -86,7 +93,7 @@ export async function insertCharacterBackground({ klass_id, race_id, character_i
   const res = await handle(policy());
   if (!res.success) return res;
   const result = await handle(
-    knex.insert({ klass_id, race_id, character_id }).into('character_backgrounds')
+    knex.insert({ id: uuid(), klass_id, race_id, character_id }).into('character_backgrounds')
   );
   return result;
 }

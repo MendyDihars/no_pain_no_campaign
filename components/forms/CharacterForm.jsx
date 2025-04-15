@@ -25,28 +25,36 @@ export default function CharacterForm({ character, races, klasses }) {
       race_id: character?.race_id || '',
       klass_id: character?.klass_id || '',
       id: character?.id || '',
+      avatar_id: character?.avatar_id || '',
     }
   });
 
   const onSubmit = async (data) => {
     let err;
     try {
-      const res = await upsertCharacter({ character: {
-        firstname: data.firstname,
-        lastname: data.lastname,
-        gender: data.gender,
-        sexual_orientation: data.sexual_orientation,
-        id: data.id,
-      } });
+      const res = await upsertCharacter({
+        character: {
+          firstname: data.firstname,
+          lastname: data.lastname,
+          gender: data.gender,
+          sexual_orientation: data.sexual_orientation,
+          id: data.id,
+          avatar_id: data.avatar_id,
+        },
+      });
       if (res.success) {
-        router.refresh();
-        const action = data.id ? updateCharacterBackground : insertCharacterBackground;
+        const action = character?.id ? updateCharacterBackground : insertCharacterBackground;
         const res2 = await action({
           klass_id: data.klass_id,
           race_id: data.race_id,
           character_id: data.id
         });
         if (!res2.success) err = res2.error;
+        else if (character?.id) {
+          router.refresh();
+        } else {
+          router.push(`/admin/characters/${res.data.id}`);
+        }
       }
       else err = res.error;
     } catch (error) {
@@ -150,6 +158,18 @@ export default function CharacterForm({ character, races, klasses }) {
             />
             <label htmlFor="sexual_orientation" className={`${roxborough.className} md:text-background text-secondary text-lg w-48 md:text-right flex md:justify-end`}>
               {t('Admin.Character.sexualOrientation')}
+            </label>
+          </div>
+          
+          <div className="flex items-center md:flex-row flex-row-reverse md:justify-end w-full">
+            <input
+              {...register('avatar_id')}
+              className="w-full text-md md:w-1/2 border-0 border-l-1 md:border-l-0 md:border-r-1 rounded-none shadow-none border-secondary md:border-background px-4 py-2 active:border-none focus:outline-none"
+              placeholder={t('Admin.Character.avatar')}
+              type="file"
+            />
+            <label htmlFor="avatar_id" className={`${roxborough.className} md:text-background text-secondary text-lg w-48 md:text-right flex md:justify-end`}>
+              {t('Admin.Character.avatar')}
             </label>
           </div>
         </div>
