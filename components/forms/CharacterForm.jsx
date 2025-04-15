@@ -123,9 +123,7 @@ export default function CharacterForm({ character, races, klasses }) {
               id="race"
               options={races.map((race) => ({ label: race.name, value: race.id }))}
               placeholder={t('Admin.Character.race')}
-              className="w-full text-md cursor-pointer md:w-1/2 border-0 border-l-1 md:border-l-0 md:border-r-1 rounded-none shadow-none border-secondary md:border-background px-4 py-2 active:border-none focus:outline-none text-right"
-              contentClassName="border-0 bg-secondary text-background"
-              itemClassName="cursor-pointer text-md rounded-none bg-background text-secondary"
+              className="w-full cursor-pointer md:w-1/2 border-0 border-l-1 md:border-l-0 md:border-r-1 rounded-none shadow-none border-secondary md:border-background px-4 py-2 active:border-none focus:outline-none text-right"
               value={watch('race_id')}
               onChange={(value) => setValue('race_id', value)}
             />
@@ -139,9 +137,7 @@ export default function CharacterForm({ character, races, klasses }) {
               id="klass"
               options={klasses.map((klass) => ({ label: klass.name, value: klass.id }))}
               placeholder={t('Admin.Character.klass')}
-              className="w-full text-md cursor-pointer md:w-1/2 border-0 border-l-1 md:border-l-0 md:border-r-1 rounded-none shadow-none border-secondary md:border-background px-4 py-2 active:border-none focus:outline-none text-right"
-              contentClassName="border-0 bg-secondary text-background"
-              itemClassName="cursor-pointer text-md rounded-none bg-background text-secondary"
+              className="w-full cursor-pointer md:w-1/2 border-0 border-l-1 md:border-l-0 md:border-r-1 rounded-none shadow-none border-secondary md:border-background px-4 py-2 active:border-none focus:outline-none text-right"
               value={watch('klass_id')}
               onChange={(value) => setValue('klass_id', value)}
             />

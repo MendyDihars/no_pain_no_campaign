@@ -1,26 +1,15 @@
 'use server';
 
 import knex from '@root/lib/db';
-import { handle, policy } from './errors';
+import getRelationsFromCharacterQuery from '@root/lib/queries/relations/get-relations-from-character';
+import { handle } from './errors';
 
 export async function getRelations(character_id) {
-  const result = await handle(
-    knex
-      .select('relationships.*', 'characters.firstname', 'characters.lastname', 'relationships_types.name as type')
-      .from('relationships')
-      .leftJoin('characters', 'relationships.recipient_id', 'characters.id')
-      .leftJoin('relationships_types', 'relationships.type_id', 'relationships_types.id')
-      .where('character_id', character_id)
-  );
-  return result;
+  const result = await handle(knex.raw(getRelationsFromCharacterQuery, [character_id]));
+  return { data: result.data?.rows, error: result.error, success: result.success };
 }
 
-
-
-
-
-
-
-
-
-
+export async function getRelationTypes() {
+  const result = await handle(knex.select('*').from('relationships_types'));
+  return result;
+}

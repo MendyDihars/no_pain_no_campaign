@@ -5,8 +5,9 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { ChevronLeftIcon } from "lucide-react";
 import CharacterForm from "@root/components/forms/CharacterForm";
-import { getRelations } from "@root/actions/relation";
+import { getRelations, getRelationTypes } from "@root/actions/relation";
 import Select from "@root/components/ui/Select";
+import DATime from "@root/lib/da-time";
 
 export default async function AdminCharacterPage({ params }) {
   const { id } = await params;
@@ -17,6 +18,7 @@ export default async function AdminCharacterPage({ params }) {
     t,
     relations,
     characters,
+    relationsTypes,
   ] = await Promise.all([
     getFullCharacter(id),
     getRaces(),
@@ -24,11 +26,17 @@ export default async function AdminCharacterPage({ params }) {
     getTranslations(),
     getRelations(id),
     getCharacters(),
+    getRelationTypes(),
   ]);
 
-  const options = characters?.data?.map((character) => ({
-    label: `${character.firstname}${character.lastname ? ` ${character.lastname}` : ''}`,
-    value: character.id,
+  const options = characters?.data?.map((c) => ({
+    label: `${c.firstname}${c.lastname ? ` ${c.lastname}` : ''}`,
+    value: c.id,
+  }));
+
+  const relationsTypesOptions = relationsTypes?.data?.map((rt) => ({
+    label: rt.name,
+    value: rt.id,
   }));
 
   return (
@@ -53,12 +61,26 @@ export default async function AdminCharacterPage({ params }) {
       </div>
       <div className="flex flex-col gap-6">
         {relations?.data?.map((relation) => (
-          <Select
-            className="w-56 border-0 rounded-none cursor-pointer"
-            key={relation.id}
-            options={options}
-            value={relation.recipient_id}
-          />
+          <div key={relation.id}>
+            <Select
+              className="w-56 mb-6 border-b-2 border-secondary"
+              key={relation.id}
+              options={options}
+              value={relation.recipient_id}
+            />
+            <div className="flex flex-wrap gap-6 text-foreground">
+              {relation.relations.map((r) => (
+                <div key={r.id}>
+                  <div>{new DATime(r.starts_at).formatDate()}</div>
+                  <Select
+                    options={relationsTypesOptions}
+                    value={r.type_id}
+                    className="w-full mt-4 border-b-2 border-secondary"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>
