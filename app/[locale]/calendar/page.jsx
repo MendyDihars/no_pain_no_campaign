@@ -1,12 +1,15 @@
-import Calendar from "@root/components/Calendar/Calendar";
-import { CircularProvider } from "@root/contexts/CircularContext";
+import CalendarWrapper from "@root/components/Calendar/CalendarWrapper";
+import { StoredDateContextProvider } from "@root/contexts/StoredDateContext";
+import knex from "@root/lib/db";
 
-export default function Page() {
+export default async function Page() {
+  const events = await knex.select('*').from('events');
+
   return (
-    <CircularProvider>
+    <StoredDateContextProvider>
       <div className="h-full w-full p-20">
-        <Calendar />
+        <CalendarWrapper events={events} />
       </div>
-    </CircularProvider>
+    </StoredDateContextProvider>
   );
 }

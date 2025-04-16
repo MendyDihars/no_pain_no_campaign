@@ -1,9 +1,9 @@
 'use client';
 
-import { useCircular } from '@root/contexts/CircularContext';
+import { useStoredDate } from '@root/contexts/StoredDateContext';
 
 export default function HeadDate() {
-  const { date } = useCircular();
+  const { date } = useStoredDate();
 
   return (
     <div>{date?.formatDateReadable()}</div>

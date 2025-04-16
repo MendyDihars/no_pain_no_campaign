@@ -12,11 +12,11 @@ export default async function Layout({ children, params }) {
   if (!hasLocale(routing.locales, locale)) notFound();
 
   return (
-    <div className="bg-background h-screen flex flex-col">
+    <div className="bg-background min-h-screen flex flex-col">
       <NextIntlClientProvider>
         <Toaster position="bottom-center" />
         <Sidebar />
-        <main className="flex-1">
+        <main className="flex-1  overflow-auto">
           {children}
         </main>
         <footer className="bg-background text-white flex justify-between py-2 px-4 text-xs">

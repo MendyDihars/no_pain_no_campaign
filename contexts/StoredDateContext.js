@@ -10,12 +10,12 @@ import {
 import DATime from '@root/lib/da-time';
 import { DEFAULT_DATE } from '@root/lib/decorators/character.helper';
 
-export const CircularContext = createContext({
+export const StoredDateContext = createContext({
   date: undefined,
   setDate: () => {},
 });
 
-export function CircularProvider({ children }) {
+export function StoredDateContextProvider({ children }) {
   const [date, setDate] = useState(undefined);
 
   useEffect(() => {
@@ -32,13 +32,13 @@ export function CircularProvider({ children }) {
   const value = useMemo(() => ({ date, setDate }), [date]);
 
   return (
-    <CircularContext.Provider value={value}>
+    <StoredDateContext.Provider value={value}>
       {children}
-    </CircularContext.Provider>
+    </StoredDateContext.Provider>
   );
 }
 
-export const useCircular = () => {
-  return useContext(CircularContext);
+export const useStoredDate = () => {
+  return useContext(StoredDateContext);
 };
 

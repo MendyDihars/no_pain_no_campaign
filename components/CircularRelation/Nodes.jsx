@@ -5,7 +5,7 @@ import { getFullname, getInitials } from '@root/lib/decorators/character.helper'
 import {
   Handle,
 } from '@xyflow/react';
-import { useCircular } from '@root/contexts/CircularContext';
+import { useStoredDate } from '@root/contexts/StoredDateContext';
 import Tooltip from '../ui/Tooltip';
 import DATime from '@root/lib/da-time';
 import { useMemo } from 'react';
@@ -31,7 +31,7 @@ export function BackgroundCircleNode({ data: { radius } }) {
 }
 
 export function CharacterNode({ data: { character, type } }) {
-  const { date } = useCircular();
+  const { date } = useStoredDate();
   const t = useTranslations();
 
   const age = useMemo(() => {
@@ -59,7 +59,12 @@ export function CharacterNode({ data: { character, type } }) {
           className="w-15 h-15 hover:scale-110 transition-all duration-300 bg-white rounded-full nodrag text-black flex items-center justify-center text-2xl font-bold relative"
         >
           {getInitials(character)}
-          <Handle type={type} position="top" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'transparent', border: 'none', display: 'none' }} />
+          <Handle
+            type={type}
+            position="top"
+            style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'transparent', border: 'none' }}
+            isConnectable={false}
+          />
         </div>
       </Link>
     </Tooltip>

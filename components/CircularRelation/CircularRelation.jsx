@@ -12,7 +12,7 @@ import { nodeTypes } from './Nodes';
 import { edgeTypes } from './Edges';
 import '@xyflow/react/dist/style.css';
 import { getCharacterContext } from '@root/actions/character';
-import { useCircular } from '@root/contexts/CircularContext';
+import { useStoredDate } from '@root/contexts/StoredDateContext';
 import { useTranslations } from 'next-intl';
 
 const minDistance = 0.75;
@@ -24,7 +24,7 @@ export default function CircularRelation({ id }) {
     width: 0,
     height: 0,
   });
-  const { date } = useCircular();
+  const { date } = useStoredDate();
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const [angles, setAngles] = useState([]);

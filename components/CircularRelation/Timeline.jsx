@@ -7,11 +7,11 @@ import {
   useRef,
 } from 'react';
 import { useTranslations } from 'next-intl';
-import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import DATime from '@root/lib/da-time';
-import { useCircular } from '@root/contexts/CircularContext';
+import { useStoredDate } from '@root/contexts/StoredDateContext';
 import Tooltip from '@root/components/ui/Tooltip';
 import { roxborough } from '@root/lib/fonts';
+import YearInput from './YearInput';
 
 const colors = [
   'bg-fuchsia-400',
@@ -28,36 +28,9 @@ const colors = [
   'bg-fuchsia-400',
 ];
 
-function NumberInput({ value, onChange, min = 0 }) {
-  const val = +value;
-  function handleChangeUp() {
-    if (val === 9) {
-      onChange(min);
-    } else {
-      onChange(val + 1);
-    }
-  }
-  
-  function handleChangeDown() {
-    if (val === min) {
-      onChange(9);
-    } else {
-      onChange(val - 1);
-    }
-  }
-
-  return (
-    <div className={`flex flex-col items-center ${roxborough.className} text-3xl`}>
-      <ChevronUpIcon className="cursor-pointer h-8 w-8 hover:bg-gray-900 rounded-full p-1" onClick={handleChangeUp} />
-      {val}
-      <ChevronDownIcon className="cursor-pointer h-8 w-8 hover:bg-gray-900 rounded-full p-1" onClick={handleChangeDown} />
-    </div>
-  )
-}
-
 function TimelineDayCalendar({ calendar, events }) {
   const ref = useRef(null);
-  const { date, setDate } = useCircular();
+  const { date, setDate } = useStoredDate();
 
   useEffect(() => {
     // go to scroll position of the day and put it in the center of the screen
@@ -113,26 +86,8 @@ function TimelineDayCalendar({ calendar, events }) {
 export default function Timeline({ events: storedEvents }) {
   const ref = useRef(null);
   const [isClientLoaded, setIsClientLoaded] = useState(false);
-  const { date, setDate } = useCircular();
+  const { date, setDate } = useStoredDate();
   const t = useTranslations();
-  
-
-  const yearSplitted = useMemo(() => {
-    if (!date?.year) return ['0', '0', '0', '0'];
-    const splitted = DATime.convertYearToString(date.year).replace(/:/, '').split('');
-    if (splitted.length === 3) return ['0', ...splitted];
-    return splitted;
-  }, [date]);
-
-  function handleYearChange(index) {
-    return (value) => {
-      const clone = [...yearSplitted];
-      clone[index] = value.toString();
-      const yearStr = `${clone[0] === '0' ? '' : clone[0]}${clone[1]}:${clone[2]}${clone[3]}`;
-      const splitted = date.formatDate().split('/');
-      setDate(new DATime(`${splitted[0]}/${splitted[1]}/${yearStr}`));
-    }
-  }
 
   const events = useMemo(() => new Map(storedEvents.map((event) => [event.date, event])), [storedEvents]);
 
@@ -146,13 +101,7 @@ export default function Timeline({ events: storedEvents }) {
 
   return isClientLoaded ? (
     <div>
-      <div className="flex items-center gap-1 ms-24 mb-6">
-        <NumberInput value={yearSplitted[0]} onChange={handleYearChange(0)} />
-        <NumberInput value={yearSplitted[1]} onChange={handleYearChange(1)} min={1} />
-        :
-        <NumberInput value={yearSplitted[2]} onChange={handleYearChange(2)} />
-        <NumberInput value={yearSplitted[3]} onChange={handleYearChange(3)} />
-      </div>
+      <YearInput date={date} onChange={setDate} className="ms-24 mb-6" />
       <div ref={ref} className="w-full h-full flex items-center overflow-x-auto pretty-scrollbar">
         <TimelineDayCalendar calendar={calendar} events={events} setDate={setDate} />
       </div>

@@ -1,6 +1,6 @@
 import CircularRelation from "@root/components/CircularRelation/CircularRelation";
 import { getFullname } from "@root/lib/decorators/character.helper";
-import { CircularProvider } from "@root/contexts/CircularContext";
+import { StoredDateContextProvider } from "@root/contexts/StoredDateContext";
 import HeadDate from "@root/components/CircularRelation/HeadDate";
 import Timeline from "@root/components/CircularRelation/Timeline";
 import { getCharacter } from "@root/actions/character";
@@ -20,7 +20,7 @@ export default async function CharacterPage({ params }) {
   }
 
   return (
-    <CircularProvider>
+    <StoredDateContextProvider>
       <div className="p-4">
         <h1 className="text-2xl font-bold text-center mt-4 mb-8">{getFullname(character)}</h1>
         <div className="text-lg font-bold text-center mt-4 mb-8">
@@ -31,7 +31,7 @@ export default async function CharacterPage({ params }) {
           <Timeline events={events} />
         </div>
       </div>
-    </CircularProvider>
+    </StoredDateContextProvider>
   );
 }
 
