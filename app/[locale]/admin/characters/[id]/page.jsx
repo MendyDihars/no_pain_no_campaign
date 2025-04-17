@@ -8,6 +8,8 @@ import CharacterForm from "@root/components/forms/CharacterForm";
 import { getRelations, getRelationTypes } from "@root/actions/relation";
 import Select from "@root/components/ui/Select";
 import DATime from "@root/lib/da-time";
+import Datepicker from "@root/components/Calendar/Datepicker";
+import CharacterRelationsForm from "@root/components/forms/CharacterRelationsForm";
 
 export default async function AdminCharacterPage({ params }) {
   const { id } = await params;
@@ -59,30 +61,11 @@ export default async function AdminCharacterPage({ params }) {
       <div className={`text-secondary text-lg mt-20 mb-6 ${roxborough.className}`}>
         {t('Admin.Characters.relationships')}
       </div>
-      <div className="flex flex-col gap-6">
-        {relations?.data?.map((relation) => (
-          <div key={relation.id}>
-            <Select
-              className="w-56 mb-6 border-b-2 border-secondary"
-              key={relation.id}
-              options={options}
-              value={relation.recipient_id}
-            />
-            <div className="flex flex-wrap gap-6 text-foreground">
-              {relation.relations.map((r) => (
-                <div key={r.id}>
-                  <div>{new DATime(r.starts_at).formatDate()}</div>
-                  <Select
-                    options={relationsTypesOptions}
-                    value={r.type_id}
-                    className="w-full mt-4 border-b-2 border-secondary"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+      <CharacterRelationsForm
+        relations={relations?.data}
+        options={options}
+        relationsTypesOptions={relationsTypesOptions}
+      />
     </div>
   );
 }

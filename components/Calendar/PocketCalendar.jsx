@@ -1,13 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import YearInput from '../CircularRelation/YearInput';
 import MonthCalendar from './MonthCalendar';
 import { ChevronLeftCircleIcon, ChevronRightCircleIcon } from 'lucide-react';
 import { roxborough } from '@root/lib/fonts';
 import DATime from '@root/lib/da-time';
 
-export default function PocketCalendar({ date, onChange }) {
+export default function PocketCalendar({ date, onChange, dayClassName }) {
   function handleMonthChange(month, action) {
     return () => {
       if (!date) return;
@@ -22,7 +21,7 @@ export default function PocketCalendar({ date, onChange }) {
   }
 
   return (
-    <div className="w-full h-full px-10 py-6 border-1 border-secondary rounded-md">
+    <div className="px-10 py-6 border-1 bg-background border-secondary rounded-md">
       <div className="flex items-center">
         <div
           onClick={handleMonthChange(date?.month, 'prev')}
@@ -31,7 +30,7 @@ export default function PocketCalendar({ date, onChange }) {
           <ChevronLeftCircleIcon className="h-8 w-8" />
         </div>
         <div className="flex justify-center items-center flex-col flex-1">
-          <YearInput date={date} onChange={onChange} />
+          <YearInput date={date} onChange={onChange} size="small" />
           <div className={`${roxborough.className} text-secondary text-lg`}>
             {DATime.monthNames[date?.month - 1]}
           </div>
@@ -43,7 +42,7 @@ export default function PocketCalendar({ date, onChange }) {
           <ChevronRightCircleIcon className="h-8 w-8" />
         </div>
       </div>
-      <MonthCalendar month={date?.month} date={date} onChange={onChange} />
+      <MonthCalendar month={date?.month} date={date} onChange={onChange} className={dayClassName} />
     </div>
   )
 }

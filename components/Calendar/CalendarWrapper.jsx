@@ -8,7 +8,6 @@ export default function CalendarWrapper({ events }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <PocketCalendar date={date} onChange={setDate} />
       <Calendar date={date} onChange={setDate} events={events} />
     </div>
   )

@@ -37,7 +37,7 @@ export default function MonthCalendar({
 
   function handleDayClick(day) {
     return () => {
-      onChange(day);
+      onChange(new DATime(day.timestamp));
     }
   }
 
@@ -49,7 +49,7 @@ export default function MonthCalendar({
   const days = useMemo(() => {
     if (!date) return [];
     return DATime.getCalendar(DATime.convertYearToString(date.year))?.byMonth[month - 1] ?? [];
-  }, [month]);
+  }, [month, date]);
   
   return (
     <div className="grid grid-cols-5">
@@ -59,7 +59,7 @@ export default function MonthCalendar({
         </div>
       ))}
       {days.map((day) => (
-      <Tooltip content={tooltipContent(day)}>
+      <Tooltip key={day?.timestamp} content={tooltipContent(day)}>
         <div
           key={day?.day}
           onClick={handleDayClick(day)}

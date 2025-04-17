@@ -12,6 +12,7 @@ import {
 } from "@root/actions/character";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Datepicker from "../Calendar/Datepicker";
 
 export default function CharacterForm({ character, races, klasses }) {
   const t = useTranslations();
@@ -21,6 +22,7 @@ export default function CharacterForm({ character, races, klasses }) {
       firstname: character?.firstname || '',
       lastname: character?.lastname || '',
       gender: character?.gender || '',
+      birthdate: character?.birthdate || '',
       sexual_orientation: character?.sexual_orientation || '',
       race_id: character?.race_id || '',
       klass_id: character?.klass_id || '',
@@ -37,6 +39,7 @@ export default function CharacterForm({ character, races, klasses }) {
           firstname: data.firstname,
           lastname: data.lastname,
           gender: data.gender,
+          birthdate: data.birthdate,
           sexual_orientation: data.sexual_orientation,
           id: data.id,
           avatar_id: data.avatar_id,
@@ -63,6 +66,8 @@ export default function CharacterForm({ character, races, klasses }) {
     if (err) toast.error(err);
     else toast.success(t('Success.characterSaved'));
   };
+
+  const birthdate = new DATime(watch('birthdate'));
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full mt-10">
@@ -96,10 +101,10 @@ export default function CharacterForm({ character, races, klasses }) {
             <label htmlFor="birthdate" className={`${roxborough.className} text-secondary text-lg w-48`}>
               {t('Admin.Character.birthdate')}
             </label>
-            <input
-              className="w-full border-l-1 flex-1 border-secondary px-4 py-2 focus:outline-none"
-              value={character?.birthdate ? new DATime(character.birthdate).formatDateReadable() : ''}
-              disabled
+            <Datepicker
+              date={birthdate}
+              onChange={(value) => setValue('birthdate', value.timestamp)}
+              className="border-l-1 border-secondary px-4 py-2 text-foreground"
             />
           </div>
           <div className="flex items-center">
