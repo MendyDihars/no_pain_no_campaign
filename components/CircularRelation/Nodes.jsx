@@ -11,6 +11,7 @@ import DATime from '@root/lib/da-time';
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import colors from '@root/lib/colors';
+import { cn } from '@root/lib/utils';
 
 export function BackgroundCircleNode({ data: { radius } }) {
   return (
@@ -56,9 +57,16 @@ export function CharacterNode({ data: { character, type } }) {
           </div>
         </div>
         <div
-          className="w-15 h-15 hover:scale-110 transition-all duration-300 bg-white rounded-full nodrag text-black flex items-center justify-center text-2xl font-bold relative"
+          className={cn(
+            'w-15 h-15 hover:scale-110 transition-all duration-300 rounded-full nodrag text-black flex items-center justify-center text-2xl font-bold relative',
+            !character?.avatar_url && 'bg-gradient-to-br from-foreground to-secondary',
+          )}
         >
-          {getInitials(character)}
+          {character?.avatar_url ? (
+            <img src={character?.avatar_url} alt={character?.firstname} className="w-15 h-15 rounded-full object-cover" />
+          ) : (
+            getInitials(character)
+          )}
           <Handle
             type={type}
             position="top"

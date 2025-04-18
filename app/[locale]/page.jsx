@@ -38,9 +38,14 @@ export default async function Home() {
           {t('Home.chainsBreakersDescription')}
         </p>
         <div className="flex flex-wrap justify-between md:justify-center items-center gap-12">
-          {characters.map((character) => (
+          {/* {characters.map((character) => (
             <CharacterCard className="w-[280px]" key={character.id} character={character} />
-          ))}
+          ))} */}
+          <CharacterCard className="w-[280px]" character={characters[0]} imgUrl="/images/eris.png" />
+          <CharacterCard className="w-[280px]" character={characters[1]} imgUrl="/images/exi.png" />
+          <CharacterCard className="w-[280px]" character={characters[2]} imgUrl="/images/gurhok.png" />
+          <CharacterCard className="w-[280px]" character={characters[3]} imgUrl="/images/mael.png" />
+          <CharacterCard className="w-[280px]" character={characters[4]} imgUrl="/images/tenda.png" />
         </div>
       </div>
     </>

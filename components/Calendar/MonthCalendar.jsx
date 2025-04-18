@@ -37,7 +37,9 @@ export default function MonthCalendar({
 
   function handleDayClick(day) {
     return () => {
-      onChange(new DATime(day.timestamp));
+      if (onChange) {
+        onChange(new DATime(day.timestamp));
+      }
     }
   }
 

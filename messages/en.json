@@ -1,6 +1,7 @@
 {
   "General": {
     "back": "Back",
+    "edit": "Edit",
     "save": "Save"
   },
   "Admin": {
@@ -10,6 +11,14 @@
       "relationships": "Relationships"
     },
     "Character": {
+      "Relations": {
+        "updated": "Relations updated successfully",
+        "created": "Relation created successfully",
+        "addRelation": "Add a relation",
+        "deleted": "Relation deleted successfully",
+        "copied": "Inverse relation copied successfully",
+        "copy": "Copy to make the relation reciprocal"
+      },
       "firstname": "Firstname",
       "lastname": "Lastname",
       "birthdate": "Birthdate",
@@ -89,6 +98,7 @@
   },
   "Errors": {
     "Unauthorized": "You are not authorized to perform this action",
-    "cantSaveCharacter": "Impossible to save character : {error}"
+    "cantSaveCharacter": "Impossible to save character : {error}",
+    "RelationAlreadyExists": "A relation already exists with these characters and with this date"
   }
 }

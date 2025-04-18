@@ -1,7 +1,7 @@
 import { roxborough } from '@root/lib/fonts';
 import Link from 'next/link';
 
-export default function CharacterCard({ character, className }) {
+export default function CharacterCard({ character, className, imgUrl }) {
   return (
     <div className={`relative group overflow-hidden h-140 py-6 my-4 ${className}`}>
       <Link
@@ -15,7 +15,7 @@ export default function CharacterCard({ character, className }) {
     <div
       className="absolute top-0 bottom-0 left-0 right-0 group-hover:scale-105 transition-all duration-300 z-0"
       style={{
-        backgroundImage: `url(https://i.postimg.cc/vmDxzxqb/mael-magie-sang.png)`,
+        backgroundImage: `url(${imgUrl})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}

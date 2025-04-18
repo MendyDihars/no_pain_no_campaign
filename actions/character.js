@@ -8,12 +8,36 @@ import { handle, policy } from "@root/actions/errors";
 import { uploadImage } from "./image";
 
 export async function getCharacters() {
-  const result = await handle(knex.select('*').from('characters').orderBy('firstname', 'asc'));
+  const result = await handle(
+    knex.select('c.*', 'i.url as avatar_url')
+      .from('characters as c')
+      .leftJoin('images as i', 'c.avatar_id', 'i.id')
+      .orderBy('c.firstname', 'asc')
+  );
   return result;
 }
 
 export async function getCharacter(id) {
-  const result = await knex.select('*').from('characters').where('id', id).first();
+  const result = await handle(
+    knex
+      .select('c.*', 'i.url as avatar_url')
+      .from('characters as c')
+      .leftJoin('images as i', 'c.avatar_id', 'i.id')
+      .where('c.id', id)
+      .first()
+  );
+  return result;
+}
+
+export async function getCharacterAvatar(id) {
+  const result = await handle(
+    knex
+      .select('i.url')
+      .from('images as i')
+      .innerJoin('characters as c', 'c.avatar_id', 'i.id')
+      .where('c.id', id)
+      .first()
+  );
   return result;
 }
 
@@ -58,7 +82,7 @@ export async function deleteCharacter(id) {
   return result;
 }
 
-export async function upsertCharacter({ character }) {
+export async function upsertCharacter(character) {
   const res = await handle(policy());
   if (!res.success) return res;
 
@@ -69,11 +93,16 @@ export async function upsertCharacter({ character }) {
   }
 
   if (character.id) {
-    const result = await handle(knex.update(character).where('id', character.id).from('characters'));
-    return result;
+    const cleanedCharacter = Object.keys(character).reduce((acc, key) => {
+      if (character[key]) acc[key] = character[key];
+      return acc;
+    }, {});
+    const result = await handle(knex.update(cleanedCharacter).where('id', character.id).from('characters'));
+    return { data: { id: character.id }, error: result.error, success: result.success };
   } else {
-    const result = await handle(knex.insert({...character, id: uuid()}).into('characters'));
-    return result;
+    const id = uuid();
+    const result = await handle(knex.insert({...character, id}).into('characters'));
+    return { data: { id }, error: result.error, success: result.success };
   }
 }
 
@@ -86,7 +115,7 @@ export async function updateCharacterBackground({ character_id, klass_id, race_i
   const result = await handle(
     knex.update(payload).where('character_id', character_id).from('character_backgrounds')
   );
-  return result;
+  return { data: { ok: true }, error: result.error, success: result.success };
 }
 
 export async function insertCharacterBackground({ klass_id, race_id, character_id }) {
@@ -95,5 +124,5 @@ export async function insertCharacterBackground({ klass_id, race_id, character_i
   const result = await handle(
     knex.insert({ id: uuid(), klass_id, race_id, character_id }).into('character_backgrounds')
   );
-  return result;
+  return { data: { ok: true }, error: result.error, success: result.success };
 }

@@ -6,9 +6,6 @@ import Link from "next/link";
 import { ChevronLeftIcon } from "lucide-react";
 import CharacterForm from "@root/components/forms/CharacterForm";
 import { getRelations, getRelationTypes } from "@root/actions/relation";
-import Select from "@root/components/ui/Select";
-import DATime from "@root/lib/da-time";
-import Datepicker from "@root/components/Calendar/Datepicker";
 import CharacterRelationsForm from "@root/components/forms/CharacterRelationsForm";
 
 export default async function AdminCharacterPage({ params }) {
@@ -18,28 +15,12 @@ export default async function AdminCharacterPage({ params }) {
     races,
     klasses,
     t,
-    relations,
-    characters,
-    relationsTypes,
   ] = await Promise.all([
     getFullCharacter(id),
     getRaces(),
     getKlasses(),
     getTranslations(),
-    getRelations(id),
-    getCharacters(),
-    getRelationTypes(),
   ]);
-
-  const options = characters?.data?.map((c) => ({
-    label: `${c.firstname}${c.lastname ? ` ${c.lastname}` : ''}`,
-    value: c.id,
-  }));
-
-  const relationsTypesOptions = relationsTypes?.data?.map((rt) => ({
-    label: rt.name,
-    value: rt.id,
-  }));
 
   return (
     <div className="h-full w-full p-20 bg-gradient-to-br from-black to-secondary">
@@ -52,7 +33,11 @@ export default async function AdminCharacterPage({ params }) {
           {character.firstname} {character.lastname}
         </div>
         {character.avatar_url ? (
-          <img src={character.avatar_url} alt={`${character.firstname} ${character.lastname}`} className="w-50 h-50 border-3 border-background rounded-full" />
+          <img
+            src={character.avatar_url}
+            alt={`${character.firstname} ${character.lastname}`}
+            className="w-50 h-50 border-3 border-background rounded-full object-cover"
+          />
         ) : (
           <div className="w-50 h-50 border-3 border-background bg-gradient-to-br from-foreground to-secondary rounded-full flex items-center justify-center" />
         )}
@@ -61,11 +46,7 @@ export default async function AdminCharacterPage({ params }) {
       <div className={`text-secondary text-lg mt-20 mb-6 ${roxborough.className}`}>
         {t('Admin.Characters.relationships')}
       </div>
-      <CharacterRelationsForm
-        relations={relations?.data}
-        options={options}
-        relationsTypesOptions={relationsTypesOptions}
-      />
+      <CharacterRelationsForm id={id} />
     </div>
   );
 }

@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Datepicker from "../Calendar/Datepicker";
+import { DEFAULT_DATE } from "@root/lib/decorators/character.helper";
 
 export default function CharacterForm({ character, races, klasses }) {
   const t = useTranslations();
@@ -35,22 +36,20 @@ export default function CharacterForm({ character, races, klasses }) {
     let err;
     try {
       const res = await upsertCharacter({
-        character: {
-          firstname: data.firstname,
-          lastname: data.lastname,
-          gender: data.gender,
-          birthdate: data.birthdate,
-          sexual_orientation: data.sexual_orientation,
-          id: data.id,
-          avatar_id: data.avatar_id,
-        },
+        firstname: data.firstname,
+        lastname: data.lastname,
+        gender: data.gender,
+        birthdate: data.birthdate,
+        sexual_orientation: data.sexual_orientation,
+        id: data.id,
+        avatar_id: data.avatar_id,
       });
       if (res.success) {
         const action = character?.id ? updateCharacterBackground : insertCharacterBackground;
         const res2 = await action({
           klass_id: data.klass_id,
           race_id: data.race_id,
-          character_id: data.id
+          character_id: res.data.id
         });
         if (!res2.success) err = res2.error;
         else if (character?.id) {
@@ -67,7 +66,7 @@ export default function CharacterForm({ character, races, klasses }) {
     else toast.success(t('Success.characterSaved'));
   };
 
-  const birthdate = new DATime(watch('birthdate'));
+  const birthdate = watch('birthdate') ? new DATime(watch('birthdate')) : new DATime(DEFAULT_DATE);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full mt-10">

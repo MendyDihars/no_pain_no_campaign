@@ -1,6 +1,7 @@
 {
   "General": {
     "back": "Retour",
+    "edit": "Modifier",
     "save": "Enregistrer"
   },
   "Admin": {
@@ -10,6 +11,14 @@
       "relationships": "Relations"
     },
     "Character": {
+      "Relations": {
+        "updated": "Relations mises à jour avec succès",
+        "created": "Relation créée avec succès",
+        "addRelation": "Ajouter une relation",
+        "deleted": "Relation supprimée avec succès",
+        "copied": "Relation inverse copiée avec succès",
+        "copy": "Copier pour rendre la relation réciproque"
+      },
       "firstname": "Prénom",
       "lastname": "Nom",
       "birthdate": "Date de naissance",
@@ -89,6 +98,7 @@
   },
   "Errors": {
     "Unauthorized": "Vous n'êtes pas autorisé à accéder à faire cette action",
-    "cantSaveCharacter": "Impossible d'enregistrer le personnage : {error}"
+    "cantSaveCharacter": "Impossible d'enregistrer le personnage : {error}",
+    "RelationAlreadyExists": "Une relation existe déjà avec ces personnages et avec cette date"
   }
 }

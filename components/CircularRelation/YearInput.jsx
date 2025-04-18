@@ -3,9 +3,11 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { roxborough } from "@root/lib/fonts";
 import DATime from "@root/lib/da-time";
 import { cn } from "@root/lib/utils";
+import { isNil } from "lodash";
 function NumberInput({ value, onChange, min = 0, size = "normal" }) {
   const val = +value;
   function handleChangeUp() {
+    if (!onChange) return;
     if (val === 9) {
       onChange(min);
     } else {
@@ -14,6 +16,7 @@ function NumberInput({ value, onChange, min = 0, size = "normal" }) {
   }
   
   function handleChangeDown() {
+    if (!onChange) return;
     if (val === min) {
       onChange(9);
     } else {
@@ -38,7 +41,7 @@ function NumberInput({ value, onChange, min = 0, size = "normal" }) {
 
 export default function YearInput({ onChange, date, className }) {
   const yearSplitted = useMemo(() => {
-    if (!date?.year) return ['0', '0', '0', '0'];
+    if (isNil(date?.year)) return ['0', '0', '0', '0'];
     const splitted = DATime.convertYearToString(date.year).replace(/:/, '').split('');
     if (splitted.length === 3) return ['0', ...splitted];
     return splitted;
@@ -50,7 +53,9 @@ export default function YearInput({ onChange, date, className }) {
       clone[index] = value.toString();
       const yearStr = `${clone[0] === '0' ? '' : clone[0]}${clone[1]}:${clone[2]}${clone[3]}`;
       const splitted = date.formatDate().split('/');
-      onChange(new DATime(`${splitted[0]}/${splitted[1]}/${yearStr}`));
+      if (onChange) {
+        onChange(new DATime(`${splitted[0]}/${splitted[1]}/${yearStr}`));
+      }
     }
   }
 

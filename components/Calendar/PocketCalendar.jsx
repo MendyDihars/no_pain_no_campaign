@@ -9,14 +9,31 @@ import DATime from '@root/lib/da-time';
 export default function PocketCalendar({ date, onChange, dayClassName }) {
   function handleMonthChange(month, action) {
     return () => {
+      let year = date?.year;
       if (!date) return;
       let _month = month;
       if (action === 'prev') {
-        _month = month - 1;
+        if (month === 1) {
+          year -= 1;
+          _month = 12;
+        } else {
+          _month = month - 1;
+        }
       } else if (action === 'next') {
-        _month = month + 1;
+        if (month === 12) {
+          year += 1;
+          _month = 1;
+        } else {
+          _month = month + 1;
+        }
       }
-      onChange(new DATime(`${date.day === 31 ? 1 : date.day}/${_month}/${DATime.convertYearToString(date.year)}`));
+      if (onChange) {
+        onChange(
+          new DATime(
+            `${date.day === 31 ? 1 : date.day}/${_month}/${DATime.convertYearToString(year)}`
+          )
+        );
+      }
     };
   }
 

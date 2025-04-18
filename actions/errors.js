@@ -6,10 +6,22 @@ export async function handle(promise) {
   const t = await getTranslations();
 
   try {
+    if (promise.toSQL) {
+      const data = promise.toSQL()
+      const sql = data.sql.replace(/\n/g, ' ').replace(/\s{2,}/g, ' ').trim()
+      console.log({
+        bindings: data.bindings,
+        query: data.sql.match(/\?/g)?.reduce((acc, match, index) => (
+          acc.replace(match, `'${data.bindings[index]}'`)
+        ), sql) ?? sql,
+      })
+    }
     const data = await promise;
     return { data, success: true };
   } catch (error) {
-    console.error(error);
+    if (error.message.includes('Empty .update() call detected')) {
+      return { success: true };
+    }
     if (error instanceof ActionError) {
       return { error: t(`Errors.${error.code}`), success: false };
     }
