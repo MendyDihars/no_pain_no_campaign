@@ -61,21 +61,21 @@ export default function MonthCalendar({
         </div>
       ))}
       {days.map((day) => (
-      <Tooltip key={day?.timestamp} content={tooltipContent(day)}>
-        <div
-          key={day?.day}
-          onClick={handleDayClick(day)}
-          className={cn(
-            'flex justify-center items-center border-1 border-secondary h-10 hover:bg-foreground/30 cursor-pointer bg-background text-foreground',
-            eventsByDay.has(day?.timestamp) ? 'bg-primary text-secondary' : '',
-            day?.timestamp === date?.timestamp ? 'bg-secondary text-background' : '',
-            className
-          )}
-        >
-          {day?.day}
-        </div>
-      </Tooltip>
-    ))}
+        <Tooltip key={day?.timestamp} content={tooltipContent(day)}>
+          <div
+            key={day?.day}
+            onClick={handleDayClick(day)}
+            className={cn(
+              'flex justify-center items-center border-1 border-secondary h-10 hover:bg-foreground/30 cursor-pointer bg-background text-foreground',
+              eventsByDay.has(day?.timestamp) ? 'bg-primary text-secondary' : '',
+              day?.timestamp === date?.timestamp ? 'bg-secondary text-background' : '',
+              className
+            )}
+          >
+            {day?.day}
+          </div>
+        </Tooltip>
+      ))}
     </div>
   );
 }
