@@ -52,6 +52,30 @@ export function RelationEdge({
   );
 }
 
+export function GroupEdge({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+}) {
+  const [edgePath] = getStraightPath({
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+  });
+
+  return (
+    <BaseEdge
+      id={id}
+      path={edgePath}
+      style={{ stroke: 'gray', strokeWidth: 2 }}
+    />
+  );
+}
+
 export const edgeTypes = {
   relation: RelationEdge,
+  groupRelation: GroupEdge,
 }

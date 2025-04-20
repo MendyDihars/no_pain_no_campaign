@@ -11,7 +11,7 @@ import DATime from '@root/lib/da-time';
 import { useStoredDate } from '@root/contexts/StoredDateContext';
 import Tooltip from '@root/components/ui/Tooltip';
 import { roxborough } from '@root/lib/fonts';
-import YearInput from './YearInput';
+import YearInput from '../Calendar/YearInput';
 
 const colors = [
   'bg-fuchsia-400',

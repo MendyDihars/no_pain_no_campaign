@@ -66,9 +66,15 @@ export async function getCharacterContext(id, date) {
   if (!date) {
     contextDate = DEFAULT_DATE;
   }
-  const result = await knex.raw(getCharacterRelationsQuery, [id, contextDate, id]);
-  const [character] = result?.rows;
-  return character;
+  const result = await handle(knex.raw(getCharacterRelationsQuery, [id, contextDate, id, id]));
+  const [character] = result?.data?.rows;
+  return {
+    ...character,
+    relations: character?.relations?.map((relation) => ({
+      ...relation,
+      groups: !relation?.groups?.[0]?.id ? [] : relation?.groups,
+    })),
+  };
 }
 
 

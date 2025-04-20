@@ -10,10 +10,9 @@ import Tooltip from '../ui/Tooltip';
 import DATime from '@root/lib/da-time';
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import colors from '@root/lib/colors';
 import { cn } from '@root/lib/utils';
 
-export function BackgroundCircleNode({ data: { radius } }) {
+export function BackgroundCircleNode({ data: { radius, color, strokeWidth } }) {
   return (
     <svg
       width={radius * 2}
@@ -24,14 +23,14 @@ export function BackgroundCircleNode({ data: { radius } }) {
         cy={radius}
         r={radius}
         fill="none"
-        stroke={colors.primary}
-        strokeWidth="4"
+        stroke={color}
+        strokeWidth={strokeWidth}
       />
     </svg>
   );
 }
 
-export function CharacterNode({ data: { character, type } }) {
+export function CharacterNode({ data: { character } }) {
   const { date } = useStoredDate();
   const t = useTranslations();
 
@@ -68,7 +67,13 @@ export function CharacterNode({ data: { character, type } }) {
             getInitials(character)
           )}
           <Handle
-            type={type}
+            type="target"
+            position="top"
+            style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'transparent', border: 'none' }}
+            isConnectable={false}
+          />
+          <Handle
+            type="source"
             position="top"
             style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'transparent', border: 'none' }}
             isConnectable={false}
@@ -79,7 +84,34 @@ export function CharacterNode({ data: { character, type } }) {
   );
 }
 
+export function GroupNode({ data: { group } }) {
+  return (
+    <div
+      className={cn(
+        'relative',
+        'w-15 h-15 hover:scale-110 transition-all duration-300 rounded-full nodrag text-black flex items-center justify-center text-2xl font-bold relative',
+        true && 'bg-gradient-to-br from-foreground to-secondary',
+        // !character?.avatar_url && 'bg-gradient-to-br from-foreground to-secondary',
+      )}
+    >
+      ?
+      <Handle
+        type="target"
+        position="top"
+        style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'transparent', border: 'none' }}
+        isConnectable={false}
+      />
+      <div className="absolute -top-5 l-eft-5 text-white text-xs w-50">
+        <div className="text-center">
+          {group.name}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const nodeTypes = {
   character: CharacterNode,
   circle: BackgroundCircleNode,
+  characterGroup: GroupNode,
 };

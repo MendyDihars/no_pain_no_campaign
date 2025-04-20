@@ -8,6 +8,7 @@ import {
 } from '@xyflow/react';
 import { Switch } from '@root/components/ui/switch';
 import { Label } from '@root/components/ui/label';
+import colors from '@root/lib/colors';
 import { nodeTypes } from './Nodes';
 import { edgeTypes } from './Edges';
 import '@xyflow/react/dist/style.css';
@@ -15,9 +16,11 @@ import { getCharacterContext } from '@root/actions/character';
 import { useStoredDate } from '@root/contexts/StoredDateContext';
 import { useTranslations } from 'next-intl';
 
-const minDistance = 0.75;
+const minDistance = 0.35;
+const charactersRadius = 175;
+const groupsRadius = 300;
 
-export default function CircularRelation({ id }) {
+export default function CharacterLink({ id }) {
   const ref = useRef(null);
   const [isRandomAngles, setIsRandomAngles] = useState(true);
   const [sizes, setSizes] = useState({
@@ -28,9 +31,10 @@ export default function CircularRelation({ id }) {
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const [angles, setAngles] = useState([]);
+  const [groupsAngles, setGroupsAngles] = useState([]);
   const [centerCoords, setCenterCoords] = useState({});
   const [character, setCharacter] = useState();
-  const radius = 200;
+  const [groups, setGroups] = useState([]);
   const t = useTranslations();
 
   function toggleAngles() {
@@ -38,36 +42,36 @@ export default function CircularRelation({ id }) {
   }
 
   function generateRandomAngles(total, minAngleGap) {
-    const angles = [];
+    const _angles = [];
   
     let tries = 0;
     const maxTries = 10000;
   
-    while (angles.length < total && tries < maxTries) {
+    while (_angles.length < total && tries < maxTries) {
       const randomAngle = Math.random() * 2 * Math.PI;
-      const isFarEnough = angles.every(a => Math.abs(a - randomAngle) > minAngleGap);
+      const isFarEnough = _angles.every(a => Math.abs(a - randomAngle) > minAngleGap);
   
       if (isFarEnough) {
-        angles.push(randomAngle);
+        _angles.push(randomAngle);
       }
   
       tries++;
     }
   
-    return angles;
+    return _angles;
   }
 
   function generateEqualAngles(total) {
-    const angles = [];
+    const _angles = [];
     const angle = 2 * Math.PI / total;
     for (let i = 0; i < total; i++) {
-      angles.push(i * angle);
+      _angles.push(i * angle);
     }
-    return angles;
+    return _angles;
   }
 
-  function calculeCirclePosition(center, index) {
-    const angle = angles[index];
+  function calculeCirclePosition(center, index, radius, _angles) {
+    const angle = _angles[index];
     return {
       x: center.x + Math.cos(angle) * radius,
       y: center.y + Math.sin(angle) * radius,
@@ -91,20 +95,37 @@ export default function CircularRelation({ id }) {
   }, [character?.relations?.length, isRandomAngles]);
 
   useEffect(() => {
+    if (groups?.length) {
+      setGroupsAngles(
+        isRandomAngles
+          ? generateRandomAngles(groups?.length, minDistance)
+          : generateEqualAngles(groups?.length)
+      );
+    }
+  }, [groups?.length, isRandomAngles]);
+
+  useEffect(() => {
     if (nodes.length) {
       let index = 0;
+      let indexGroups = 0;
       const ids = character?.relations?.map((relation) => relation.id) ?? [];
+      const groupsIds = groups?.map((group) => group.id) ?? [];
       setNodes(nodes.map((node) => {
-        if (ids.includes(node.id)) {
+        if (ids.includes(node.id) && angles.length) {
           return {
             ...node,
-            position: calculeCirclePosition(centerCoords, index++),
+            position: calculeCirclePosition(centerCoords, index++, charactersRadius, angles),
+          };
+        } else if (groupsIds.includes(node.id) && groupsAngles.length) {
+          return {
+            ...node,
+            position: calculeCirclePosition(centerCoords, indexGroups++, groupsRadius, groupsAngles),
           };
         }
         return node;
       }));
     }
-  }, [angles, nodes.length, centerCoords, character?.relations?.length])
+  }, [angles, groupsAngles, nodes.length, centerCoords, character?.relations?.length, groups])
 
   useEffect(() => {
     const handleResize = () => {
@@ -126,10 +147,18 @@ export default function CircularRelation({ id }) {
       setCenterCoords(center);
       setNodes([
         {
-          id: 'background-circle-1',
+          id: 'background-circle-relations',
           type: 'circle',
           position: center,
-          data: { radius },
+          data: { radius: charactersRadius, color: colors.primary, strokeWidth: 4 },
+          style: { zIndex: -1 },
+          origin: [0.5, 0.5],
+        },
+        {
+          id: 'background-circle-groups',
+          type: 'circle',
+          position: center,
+          data: { radius: groupsRadius, color: colors.secondary, strokeWidth: 2 },
           style: { zIndex: -1 },
           origin: [0.5, 0.5],
         },
@@ -144,33 +173,76 @@ export default function CircularRelation({ id }) {
           character?.relations?.map((relation, index) => ({
             id: relation.id,
             data: { character: relation, type: 'target' },
-            position: calculeCirclePosition(center, index),
+            position: calculeCirclePosition(center, index, charactersRadius, angles),
             type: 'character',
+            origin: [0.5, 0.5],
+          })) ?? []
+        ),
+        ...(
+          groups?.map((group, index) => ({
+            id: group.id,
+            data: { group },
+            type: 'characterGroup',
+            position: calculeCirclePosition(center, index, groupsRadius, groupsAngles),
             origin: [0.5, 0.5],
           })) ?? []
         ),
       ]);
     }
-  }, [character, sizes]);
+  }, [character, sizes, angles, groupsAngles]);
 
   useEffect(() => {
     if (nodes.length && character?.id) {
-      setEdges(
-        character?.relations?.map((relation) => ({
-          id: `${character.id}_${relation.id}`,
+      setEdges([
+        ...(
+          character?.relations?.map((relation) => ([
+            {
+              id: `${character.id}_${relation.id}`,
+              source: character.id,
+              target: relation.id,
+              data: { character: relation },
+              type: 'relation',
+            },
+            ...relation.groups.map((group) => ({
+              id: `${relation.id}_${group.id}`,
+              source: relation.id,
+              target: group.id,
+              data: { group },
+              type: 'groupRelation',
+            })),
+          ])).flat() ?? []
+        ),
+        ...character?.groups?.map((group) => ({
+          id: `${character.id}_${group.id}`,
           source: character.id,
-          target: relation.id,
-          data: { character: relation },
-          type: 'relation',
+          target: group.id,
+          data: { group },
+          type: 'groupRelation',
         })),
-      );
+      ]);
     }
   }, [nodes, character?.id]);
 
   useEffect(() => {
     const fetchCharacter = async () => {
       const character = await getCharacterContext(id, date.timestamp);
-      setCharacter(character);
+      if (character) {
+        setCharacter(character);
+        const allGroups = [
+          ...character.relations?.map((relation) => relation.groups).flat(),
+          ...character.groups,
+        ];
+        setGroups(
+          Array.from(
+            allGroups?.reduce((acc, group) => {
+              if (!acc.has(group.id)) {
+                acc.set(group.id, group);
+              }
+              return acc;
+            }, new Map())?.values() ?? []
+          )
+        );
+      }
     };
     if (date) {
       fetchCharacter();
@@ -181,7 +253,7 @@ export default function CircularRelation({ id }) {
     <div className="w-full h-[60vh] relative">
       <div className="flex items-center mb-2">
         <Label htmlFor="equal-angles" className="me-2">
-          {t("CircularRelation.symmetricalStructure")}
+          {t("CharacterLink.symmetricalStructure")}
         </Label>
         <Switch id="equal-angles" onCheckedChange={toggleAngles} className="cursor-pointer" />
       </div>

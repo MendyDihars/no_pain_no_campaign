@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeftCircleIcon, ChevronRightCircleIcon } from 'lucide-react';
 import Tooltip from '@root/components/ui/Tooltip';
-import YearInput from '@root/components/CircularRelation/YearInput';
+import YearInput from '@root/components/Calendar/YearInput';
 import MonthCalendar from './MonthCalendar';
 import { roxborough } from '@root/lib/fonts';
 import DATime from '@root/lib/da-time';

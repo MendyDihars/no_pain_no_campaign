@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import DATime from '@root/lib/da-time';
 import { roxborough } from '@root/lib/fonts';
-import YearInput from '../CircularRelation/YearInput';
+import YearInput from './YearInput';
 import MonthCalendar from './MonthCalendar';
 
 export default function Calendar({ date, onChange, events }) {

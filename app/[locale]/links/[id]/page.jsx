@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { PenToolIcon } from "lucide-react";
-import CircularRelation from "@root/components/CircularRelation/CircularRelation";
+import CharacterLink from "@root/components/CharacterLink/CharacterLink";
 import { getFullname } from "@root/lib/decorators/character.helper";
 import { StoredDateContextProvider } from "@root/contexts/StoredDateContext";
-import HeadDate from "@root/components/CircularRelation/HeadDate";
-import Timeline from "@root/components/CircularRelation/Timeline";
+import HeadDate from "@root/components/CharacterLink/HeadDate";
+import Timeline from "@root/components/CharacterLink/Timeline";
 import { getCharacter } from "@root/actions/character";
 import { getEvents } from "@root/actions/event";
 import { getTranslations } from "next-intl/server";
@@ -39,7 +39,7 @@ export default async function CharacterPage({ params }) {
         <div className="text-lg font-bold text-center mt-4 mb-8">
           <HeadDate />
         </div>
-        <CircularRelation id={id} />
+        <CharacterLink id={id} />
         <div className="mt-16">
           <Timeline events={events} />
         </div>
